@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Innovate at the Edge · Reference Architectures</title>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cb-red:#EC1218;--cb-orange:#FC9C0C;--cb-burgundy:#97000F;--cb-peach:#FFF0DB;
+  --cb-blue:#0266C2;--cb-black:#000;--cb-dark:#2E2E2E;--cb-lgrey:#A8A8A8;
+  --cb-wgrey:#F7F7F7;--cb-white:#fff;--border:#E6E6E6;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Open Sans',sans-serif;color:var(--cb-dark);background:var(--cb-white)}
+header{padding:40px 48px 0;max-width:1400px;margin:0 auto}
+.eyebrow{font-size:13px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--cb-red);margin:0 0 10px}
+h1{font-size:42px;font-weight:500;letter-spacing:-.01em;line-height:1.05;color:var(--cb-black);margin:0 0 10px}
+.sub{font-size:17px;max-width:780px;line-height:1.6;margin:0 0 28px}
+nav{display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--border);max-width:1400px;margin:0 auto;padding:0 48px}
+nav button{font-family:inherit;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;
+  background:none;border:0;border-bottom:3px solid transparent;padding:14px 16px;cursor:pointer;color:var(--cb-lgrey);transition:all .15s ease-out}
+nav button:hover{color:var(--cb-dark);background:var(--cb-wgrey)}
+nav button.on{color:var(--cb-black);border-bottom-color:var(--cb-red)}
+main{max-width:1400px;margin:0 auto;padding:36px 48px 40px}
+.panel{display:none}.panel.on{display:block}
+.phead{display:flex;gap:40px;align-items:flex-start;margin-bottom:26px;flex-wrap:wrap}
+.phead .t{flex:1 1 460px}
+h2{font-size:30px;font-weight:600;color:var(--cb-black);margin:0 0 8px;line-height:1.2}
+.usecase{font-size:16px;line-height:1.6;margin:0}
+.metrics{display:flex;gap:32px;flex-wrap:wrap}
+.metric .n{font-size:34px;font-weight:700;color:var(--cb-red);line-height:1}
+.metric .l{font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--cb-lgrey);margin-top:6px}
+.diagram{border:1px solid var(--border);border-radius:16px;background:var(--cb-white);padding:10px;overflow-x:auto;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+svg{display:block;min-width:1100px;width:100%;height:auto}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin-top:26px}
+.card{border:1px solid var(--border);border-radius:16px;padding:22px;background:var(--cb-white)}
+.card h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cb-red);margin:0 0 14px}
+.card ol,.card ul{margin:0;padding-left:20px}
+.card li{font-size:14px;line-height:1.65;margin-bottom:9px}
+.card li:last-child{margin-bottom:0}
+.card li b{color:var(--cb-black);font-weight:600}
+code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--cb-wgrey);
+  border:1px solid var(--border);border-radius:4px;padding:1px 5px;color:var(--cb-burgundy)}
+.flood{height:5px;background:linear-gradient(90deg,var(--cb-peach),var(--cb-orange) 45%,var(--cb-red) 78%,var(--cb-burgundy));border-radius:999px;margin:0 auto 34px;max-width:1400px}
+.legend{max-width:1400px;margin:0 auto;padding:0 48px 40px;display:flex;gap:28px;flex-wrap:wrap;font-size:13px;color:var(--cb-dark)}
+.legend span{display:flex;align-items:center;gap:9px}
+.swatch{width:26px;height:0;border-top:2px solid}
+.dot{width:16px;height:16px;border-radius:999px;background:var(--cb-burgundy)}
+.glossary{max-width:1400px;margin:0 auto;padding:32px 48px 70px;border-top:1px solid var(--border)}
+.glossary h2{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--cb-lgrey);margin:28px 0 18px}
+.glossary dl{column-width:280px;column-gap:36px;font-size:13px;line-height:1.6}
+.glossary div{break-inside:avoid;margin:0 0 11px;display:flex;gap:8px}
+.glossary dt{font-weight:700;color:var(--cb-black);white-space:nowrap}
+.glossary dd{margin:0;color:var(--cb-dark)}
+.tier{font:600 11.5px 'Open Sans';fill:#2E2E2E;letter-spacing:.09em}
+.tsub{font:400 10px 'Open Sans';fill:#A8A8A8}
+.bandtxt{font:600 10px 'Open Sans';fill:#A8A8A8;letter-spacing:.11em}
+.loc{font:600 14px 'Open Sans';fill:#000}
+.node{font:600 11px 'Open Sans';fill:#000}
+.nodew{font:600 11px 'Open Sans';fill:#fff}
+.sm{font:400 9.5px 'Open Sans';fill:#2E2E2E}
+.smw{font:400 9.5px 'Open Sans';fill:#fff}
+.note{font:400 10px 'Open Sans';fill:#A8A8A8}
+.lbl{font:600 10px 'Open Sans';fill:#EC1218}
+.step{font:700 10px 'Open Sans';fill:#fff}
+</style>
+</head>
+<body>
+
+<header>
+  <p class="eyebrow">Innovate at the Edge · October launch</p>
+  <h1>Reference architectures by vertical</h1>
+  <p class="sub">Five industries, one underlying topology: cloud, edge, client. What changes from one to the next is where writes actually happen and what still has to work when the network doesn't.</p>
+</header>
+<div class="flood"></div>
+
+<nav id="nav"></nav>
+<main id="main"></main>
+
+<div class="legend">
+  <span><i class="swatch" style="border-color:#EC1218"></i> Couchbase replication</span>
+  <span><i class="swatch" style="border-color:#EC1218;border-top-style:dashed"></i> Intermittent or metered link</span>
+  <span><i class="swatch" style="border-color:#2E2E2E;border-top-width:1.5px"></i> Application traffic</span>
+  <span><i class="swatch" style="border-color:#0266C2"></i> The one thing that differs in this vertical</span>
+  <span><i class="dot"></i> Step in the data flow, described alongside</span>
+</div>
+
+<div class="glossary">
+  <h2>Glossary</h2>
+  <dl>
+    <div><dt>AI</dt><dd>Artificial Intelligence</dd></div>
+    <div><dt>BLE</dt><dd>Bluetooth Low Energy</dd></div>
+    <div><dt>BOM</dt><dd>Bill of Materials</dd></div>
+    <div><dt>CBL</dt><dd>Couchbase Lite, the embedded on-device database and sync engine</dd></div>
+    <div><dt>Core ML</dt><dd>Apple's on-device machine learning framework</dd></div>
+    <div><dt>DB</dt><dd>Database</dd></div>
+    <div><dt>DCS</dt><dd>Departure Control System</dd></div>
+    <div><dt>DR</dt><dd>Disaster Recovery</dd></div>
+    <div><dt>ERP</dt><dd>Enterprise Resource Planning</dd></div>
+    <div><dt>FA</dt><dd>Flight Attendant</dd></div>
+    <div><dt>HMI</dt><dd>Human Machine Interface, the operator screen on a line</dd></div>
+    <div><dt>IFE</dt><dd>In-Flight Entertainment</dd></div>
+    <div><dt>LAN</dt><dd>Local Area Network</dd></div>
+    <div><dt>LLM</dt><dd>Large Language Model</dd></div>
+    <div><dt>LTE</dt><dd>Long Term Evolution, the 4G cellular standard</dd></div>
+    <div><dt>MES</dt><dd>Manufacturing Execution System</dd></div>
+    <div><dt>MPLS</dt><dd>Multiprotocol Label Switching, a private carrier circuit</dd></div>
+    <div><dt>MQTT</dt><dd>Message Queuing Telemetry Transport, a lightweight IoT messaging protocol</dd></div>
+    <div><dt>MS</dt><dd>Motor Ship, the vessel prefix in "MS Meridian"</dd></div>
+    <div><dt>NUC</dt><dd>Next Unit of Computing, a small-form-factor PC often used as a back-office server</dd></div>
+    <div><dt>OEE</dt><dd>Overall Equipment Effectiveness</dd></div>
+    <div><dt>OMS</dt><dd>Order Management System</dd></div>
+    <div><dt>OPC-UA</dt><dd>Open Platform Communications Unified Architecture, a standard industrial data protocol</dd></div>
+    <div><dt>ORD</dt><dd>Chicago O'Hare International Airport (IATA code)</dd></div>
+    <div><dt>OT</dt><dd>Operational Technology, the plant-floor control network</dd></div>
+    <div><dt>P2P</dt><dd>Peer-to-peer, device-to-device sync with no server in the path</dd></div>
+    <div><dt>PLC</dt><dd>Programmable Logic Controller</dd></div>
+    <div><dt>PNR</dt><dd>Passenger Name Record, the booking record</dd></div>
+    <div><dt>POS</dt><dd>Point of Sale</dd></div>
+    <div><dt>PSS</dt><dd>Passenger Service System</dd></div>
+    <div><dt>SGW</dt><dd>Sync Gateway</dd></div>
+    <div><dt>TTL</dt><dd>Time To Live, an expiry set on a document</dd></div>
+    <div><dt>VSAT</dt><dd>Very Small Aperture Terminal, the ship-mounted satellite dish</dd></div>
+    <div><dt>WAN</dt><dd>Wide Area Network</dd></div>
+    <div><dt>XDCR</dt><dd>Cross Data Center Replication, server-to-server replication between Couchbase clusters</dd></div>
+  </dl>
+</div>
+
+<script>
+(function(){
+
+/* ============ grid ============ */
+const W=1180,H=730;
+const LBL=150;
+const CLOUD=[0,200], B1=[200,260], EDGE=[260,480], B2=[480,540], CLIENT=[540,730];
+const MID=665;
+const SPINE_L=505, SPINE_R=810;
+const BUS=568;
+const ROW1=310, ROW1H=56, ROW2=390, ROW2H=48;
+const DEV=596, DEVH=58, DEVW=140;
+const CY=61, CH=56;
+const TRUNK_Y=B1[0]+30;
+
+/* ============ primitives ============ */
+const box=(x,y,w,h,l,s,kind)=>{
+  const f={cbs:'#FDE7E7',sgw:'#EC1218',app:'#F7F7F7',blue:'#0266C2',dev:'#fff'}[kind];
+  const st={cbs:'#EC1218',sgw:'#97000F',app:'#DADADA',blue:'#0266C2',dev:'#000'}[kind];
+  const sw=(kind==='dev')?2:1.4;
+  const tc=(kind==='sgw'||kind==='blue')?'nodew':'node';
+  const sc=(kind==='sgw'||kind==='blue')?'smw':'sm';
+  return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="6" fill="${f}" stroke="${st}" stroke-width="${sw}"/>`
+   +`<text class="${tc}" x="${x+w/2}" y="${y+h/2+(s?-3:4)}" text-anchor="middle">${l}</text>`
+   +(s?`<text class="${sc}" x="${x+w/2}" y="${y+h/2+12}" text-anchor="middle">${s}</text>`:'');
+};
+const cbs=(x,y,w,h,l,s)=>box(x,y,w,h,l,s,'cbs');
+const sgw=(x,y,w,h,l,s)=>box(x,y,w,h,l,s,'sgw');
+const app=(x,y,w,h,l,s)=>box(x,y,w,h,l,s,'app');
+const blu=(x,y,w,h,l,s)=>box(x,y,w,h,l,s,'blue');
+const dev=(x,l,s)=>box(x,DEV,DEVW,DEVH,l,s,'dev');
+const devB=(x,l,s)=>box(x,DEV,DEVW,DEVH,l,s,'blue');
+
+const p=(pts,o={})=>{
+  const k=o.k||'r', col={r:'#EC1218',g:'#2E2E2E',b:'#0266C2'}[k];
+  const d='M '+pts.map(q=>q.join(' ')).join(' L ');
+  const e=(o.ends===undefined)?'both':o.ends;
+  return `<path d="${d}" fill="none" stroke="${col}" stroke-width="${o.w||2}" stroke-linejoin="round"`
+   +(o.dash?' stroke-dasharray="7 5"':'')
+   +((e==='both'||e==='start')?` marker-start="url(#a${k})"`:'')
+   +((e==='both'||e==='end')?` marker-end="url(#a${k})"`:'')+'/>';
+};
+const gl=(y,x1,x2)=>p([[x1,y],[x2,y]],{k:'g',w:1.5});
+const step=(x,y,n)=>`<circle cx="${x}" cy="${y}" r="11" fill="#97000F" stroke="#fff" stroke-width="2"/>`
+  +`<text class="step" x="${x}" y="${y+3.6}" text-anchor="middle">${n}</text>`;
+const T=(x,y,t,c)=>`<text class="${c}" x="${x}" y="${y}">${t}</text>`;
+const Tc=(x,y,t,c)=>`<text class="${c}" x="${x}" y="${y}" text-anchor="middle">${t}</text>`;
+
+const upToBus=(centers,k='r')=>centers.map(c=>p([[c,DEV],[c,BUS]],{ends:'none',k})).join('')
+  +p([[Math.min(...centers),BUS],[Math.max(...centers),BUS]],{ends:'none',k});
+const spineUp=(x,toY,k='r')=>p([[x,BUS],[x,toY]],{ends:'end',k});
+const p2p=(a,b)=>p([[a+DEVW,DEV+DEVH/2],[b,DEV+DEVH/2]],{dash:1});
+const thin=(x,l,s)=>box(x,DEV,DEVW,DEVH,l,s,'app');
+
+const frame=(tiers,bands,split)=>{
+  let s=`<rect x="0.75" y="0.75" width="${W-1.5}" height="${H-1.5}" rx="14" fill="#fff" stroke="#E6E6E6"/>`;
+  s+=`<rect x="${LBL}" y="${B1[0]}" width="${W-LBL}" height="${B1[1]-B1[0]}" fill="#F7F7F7"/>`;
+  s+=`<rect x="${LBL}" y="${B2[0]}" width="${W-LBL}" height="${B2[1]-B2[0]}" fill="#F7F7F7"/>`;
+  [B1[0],B1[1],B2[0],B2[1]].forEach(y=>s+=`<line x1="0" y1="${y}" x2="${W}" y2="${y}" stroke="#E6E6E6"/>`);
+  s+=`<line x1="${LBL}" y1="1" x2="${LBL}" y2="${H-1}" stroke="#E6E6E6"/>`;
+  if(split) s+=`<line x1="${MID}" y1="${EDGE[0]}" x2="${MID}" y2="${H-1}" stroke="#E6E6E6"/>`;
+  tiers.forEach(([y,name,subs])=>{
+    s+=`<text class="tier" text-anchor="end" x="${LBL-14}" y="${y+24}">${name}</text>`;
+    subs.forEach((t,i)=>s+=`<text class="tsub" text-anchor="end" x="${LBL-14}" y="${y+42+i*13}">${t}</text>`);
+  });
+  s+=`<text class="bandtxt" x="${LBL+16}" y="${B1[1]-12}">${bands[0].toUpperCase()}</text>`;
+  s+=`<text class="bandtxt" x="${LBL+16}" y="${B2[1]-12}">${bands[1].toUpperCase()}</text>`;
+  return s;
+};
+const DEFS=`<defs>${['r','g','b'].map(k=>{
+  const c={r:'#EC1218',g:'#2E2E2E',b:'#0266C2'}[k];
+  return `<marker id="a${k}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`;
+}).join('')}</defs>`;
+
+const cloudTier=(title,left,cbsL,cbsS,sgwL,sgwS,right,rightIsCbs)=>{
+  let s=T(LBL+22,32,title,'loc');
+  s+=app(175,CY,170,CH,left[0][0],left[0][1]);
+  s+=app(370,CY,170,CH,left[1][0],left[1][1]);
+  s+=cbs(565,CY,150,CH,cbsL,cbsS);
+  s+=app(740,CY,170,CH,right[0][0],right[0][1]);
+  s+=(rightIsCbs?cbs:app)(935,CY,170,CH,right[1][0],right[1][1]);
+  s+=gl(CY+CH/2,345,370)+gl(CY+CH/2,540,565)+gl(CY+CH/2,715,740)+gl(CY+CH/2,910,935);
+  s+=sgw(565,130,150,48,sgwL,sgwS);
+  s+=p([[640,CY+CH],[640,130]]);
+  return s;
+};
+const trunk=(spines,dashes)=>{
+  let s=p([[640,178],[640,TRUNK_Y]],{ends:'none'});
+  s+=p([[Math.min(640,...spines),TRUNK_Y],[Math.max(640,...spines),TRUNK_Y]],{ends:'none'});
+  spines.forEach((x,i)=>s+=p([[x,TRUNK_Y],[x,ROW1]],{ends:'end',dash:dashes[i]}));
+  return s;
+};
+const stackL=(t,c1,c2,s1,s2)=>T(LBL+22,286,t,'loc')+cbs(430,ROW1,150,ROW1H,c1,c2)
+  +sgw(430,ROW2,150,ROW2H,s1,s2)+p([[SPINE_L,ROW1+ROW1H],[SPINE_L,ROW2]]);
+const stackR=(t,c1,c2,s1,s2)=>T(MID+22,286,t,'loc')+cbs(700,ROW1,150,ROW1H,c1,c2)
+  +sgw(700,ROW2,150,ROW2H,s1,s2)+p([[SPINE_R,ROW1+ROW1H],[SPINE_R,ROW2]]);
+
+/* ================= 1. RETAIL ================= */
+const retail=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella / self-managed','Multi-region']],
+          [EDGE[0],'STORE EDGE',['In-store server','Back-office NUC']],
+          [CLIENT[0],'CLIENT',['CBL handheld &amp; lane · food','Dumb terminal · product']]],
+         ['WAN · MPLS / broadband / LTE failover','Store LAN · Wi-Fi · BLE peer mesh'],true)}
+${cloudTier('Central: merchandising, pricing, inventory of record',
+  [['Merchandising','Pricing &amp; promos'],['ERP / OMS','Inventory of record']],
+  'Couchbase Server','Product · price · promo','Sync Gateway','Channel per store',
+  [['Analytics','Basket &amp; sell-through'],['Couchbase Server','DR region']],true)}
+${p([[640,CY],[640,40],[1010,40],[1010,CY]])}
+${Tc(825,34,'XDCR to the DR region','lbl')}
+${trunk([SPINE_L,SPINE_R],[0,0])}
+${step(575,TRUNK_Y,4)}
+${stackL('Food retail · grocery, restaurant','Couchbase Server','Store subset','Sync Gateway','Lane sync')}
+${T(LBL+22,303,'Variant: thin stores skip this tier, sync straight to cloud SGW.','note')}
+${app(175,ROW1,200,ROW1H,'Store services','Tax · loyalty · receipt')}
+${app(175,ROW2,200,ROW2H,'Local reporting','Cash &amp; shift close')}
+${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
+${dev(175,'Lane 1','Couchbase Lite')}${dev(335,'Lane 2','Couchbase Lite')}${dev(495,'Handheld','Couchbase Lite')}
+${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${p2p(315,335)}${p2p(475,495)}
+${step(405,676,2)}${Tc(405,708,'P2P: lanes keep selling if the store server drops','lbl')}
+${stackR('Product retail · big box, apparel','Couchbase Server','Store subset','Sync Gateway','Terminal sync')}
+${app(880,ROW1,280,ROW1H,'Store services','Tax · pricing · receipt')}
+${app(880,ROW2,280,ROW2H,'Terminal controller','Session &amp; queueing')}
+${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
+${thin(690,'Checkout 1','No local DB')}${thin(850,'Checkout 2','No local DB')}${thin(1010,'Price checker','No local DB')}
+${upToBus([760,920,1080],'g')}${spineUp(SPINE_R,ROW2+ROW2H,'g')}${step(SPINE_R,B2[0]+30,3)}
+${Tc(920,708,'Dumb terminals: no local database, nothing to reconcile','note')}
+</svg>`;
+
+/* ================= 2. MANUFACTURING ================= */
+const mfg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella','Fleet-wide']],
+          [EDGE[0],'PLANT EDGE',['Level 3 / DMZ','Industrial PC']],
+          [CLIENT[0],'CLIENT / OT',['PLC gateway','Line HMI','Inspection cam']]],
+         ['WAN · plant uplink, assumed unreliable','Plant LAN · OT network segment'],true)}
+${cloudTier('Corporate: a fleet of 40 plants',
+  [['MES / ERP','Work orders · BOM'],['Model training','Defect &amp; anomaly']],
+  'Couchbase Server','Fleet telemetry','Sync Gateway','Channel per plant',
+  [['OEE dashboards','Fleet benchmarking'],['Quality','Genealogy &amp; traceability']],false)}
+${trunk([SPINE_L,SPINE_R],[0,0])}
+${step(575,TRUNK_Y,4)}
+${stackL('Plant · Monterrey','Couchbase Server','30d plant history','Sync Gateway','Line sync')}
+${app(175,ROW1,200,ROW1H,'Edge inference','Defect scoring, local')}
+${app(175,ROW2,200,ROW2H,'Historian bridge','OPC-UA · MQTT')}
+${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
+${stackR('Plant · Pune','Couchbase Server','30d plant history','Sync Gateway','Line sync')}
+${app(880,ROW1,280,ROW1H,'Edge inference','Same model artifact')}
+${app(880,ROW2,280,ROW2H,'Historian bridge','OPC-UA · MQTT')}
+${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
+${p([[580,ROW1+ROW1H/2],[700,ROW1+ROW1H/2]])}
+${Tc(640,ROW1+ROW1H+18,'Optional plant to plant XDCR','lbl')}
+${dev(175,'Line 1 HMI','Couchbase Lite')}${dev(335,'Line 2 HMI','Couchbase Lite')}${devB(495,'PLC gateway','CBL Java / C')}
+${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${Tc(405,708,'Local writes: cycle counts, scrap events, operator overrides','note')}
+${dev(690,'Line 1 HMI','Couchbase Lite')}${dev(850,'Inspection cam','Couchbase Lite')}${dev(1010,'Tablet','Couchbase Lite')}
+${upToBus([760,SPINE_R])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,2)}
+${p2p(830,850)}${p2p(990,1010)}
+${step(965,676,3)}${Tc(920,708,'P2P: the cell keeps running with the plant server offline','lbl')}
+</svg>`;
+
+/* ================= 3. HOSPITALITY ================= */
+const hosp=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Shoreside','Capella']],
+          [EDGE[0],'SHIP EDGE',['Onboard datacenter','Sails offline']],
+          [CLIENT[0],'CLIENT',['Crew tablet','Guest app','Cabin panel']]],
+         ['Satellite / port Wi-Fi · high latency, metered','Ship LAN · Wi-Fi · BLE'],false)}
+${cloudTier('Shoreside: reservations, loyalty, revenue',
+  [['Reservation system','Manifest &amp; itinerary'],['Revenue &amp; folio','Post-cruise settle']],
+  'Couchbase Server','Bookings · profiles','Sync Gateway','Channel per sailing',
+  [['Loyalty','Cross-fleet profile'],['Fleet analytics','Voyage performance']],false)}
+${trunk([SPINE_L],[1])}
+${step(575,TRUNK_Y,4)}
+${T(MID+22,B1[1]-12,'Sync in port or over VSAT. Delta sync keeps the bill down.','note')}
+${stackL('MS Meridian · at sea','Couchbase Server','Full sailing state','Sync Gateway','Crew, guest, cabin channels')}
+${app(620,ROW1,175,ROW1H,'POS &amp; folio','Bars · spa · excursions')}
+${blu(815,ROW1,175,ROW1H,'AI concierge','Local model + CBL vector')}
+${app(1010,ROW1,150,ROW1H,'Digital signage','Menus · schedule')}
+${app(620,ROW2,175,ROW2H,'Muster &amp; safety','Authoritative onboard')}
+${app(815,ROW2,175,ROW2H,'Housekeeping','Cabin status')}
+${gl(ROW1+ROW1H/2,580,620)}${gl(ROW1+ROW1H/2,795,815)}${gl(ROW1+ROW1H/2,990,1010)}
+${gl(ROW2+ROW2H/2,580,620)}${gl(ROW2+ROW2H/2,795,815)}
+${T(1010,ROW2+30,'Ship carries the real dataset, reconciled in port.','note')}
+${dev(175,'Crew tablet','Couchbase Lite')}${dev(335,'Bar terminal','Couchbase Lite')}${dev(495,'Cabin panel','Couchbase Lite')}
+${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${step(405,676,2)}${Tc(405,708,'Every onboard transaction resolves without shore','lbl')}
+${dev(700,'Excursion scanner','Couchbase Lite')}${dev(860,'Guide tablet','Couchbase Lite')}${dev(1020,'Muster reader','Couchbase Lite')}
+${p2p(840,860)}${p2p(1000,1020)}
+${step(930,676,3)}${Tc(930,708,'Ashore: P2P between devices, reconcile on return','lbl')}
+</svg>`;
+
+/* ================= 4. AIRLINE ================= */
+const air=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella','Airline core']],
+          [EDGE[0],'EDGE',['Aircraft server','Station server']],
+          [CLIENT[0],'CLIENT',['Crew iPad','Gate agent','Ramp device']]],
+         ['Ku / Ka satcom · gate Wi-Fi · station broadband','Cabin Wi-Fi · gate LAN · BLE'],true)}
+${cloudTier('Airline core: network operations',
+  [['PSS / DCS','Booking &amp; check-in'],['Crew &amp; ops control','Disruption mgmt']],
+  'Couchbase Server','PNR · manifest · crew','Sync Gateway','Channel per flight / station',
+  [['Maintenance','Defect &amp; parts'],['Revenue mgmt','Upsell pricing']],false)}
+${trunk([SPINE_L,SPINE_R],[1,0])}
+${step(575,TRUNK_Y,5)}
+${T(MID+22,B1[1]-12,'In flight the satcom link is metered, so sync is delta-only.','note')}
+${stackL('Aircraft · tail N412UA, in flight','Couchbase Server','This flight only','Sync Gateway','Cabin channel')}
+${app(175,ROW1,200,ROW1H,'Cabin services','Upsell · meals · seats')}
+${blu(175,ROW2,200,ROW2H,'IFE catalog','Pre-loaded at base')}
+${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
+${stackR('Station · ORD','Couchbase Server','Station flights, 48h','Sync Gateway','Gate + ramp channels')}
+${app(880,ROW1,280,ROW1H,'Gate &amp; boarding','Standby · upgrades')}
+${app(880,ROW2,280,ROW2H,'Ramp / weight-balance','Load sheet')}
+${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
+${dev(175,'Purser iPad','Couchbase Lite')}${dev(335,'FA iPad','Couchbase Lite')}${dev(495,'FA iPad','Couchbase Lite')}
+${upToBus([245,SPINE_L])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${p2p(315,335)}${p2p(475,495)}
+${step(405,676,2)}${Tc(405,708,'P2P across the cabin: meal and upsell state stays consistent','lbl')}
+${dev(690,'Gate agent','Couchbase Lite')}${dev(850,'Ramp handheld','Couchbase Lite')}${dev(1010,'Boarding scanner','Couchbase Lite')}
+${upToBus([760,920,1080])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,3)}
+${step(965,676,4)}${Tc(920,708,'Station writes resolve locally while the core is saturated','lbl')}
+</svg>`;
+
+/* ================= 5. EDGE AI ================= */
+const edgeai=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella','Model &amp; index authoring']],
+          [EDGE[0],'EDGE INFERENCE',['Site server','Ruggedized box']],
+          [CLIENT[0],'CLIENT',['Handheld','Wearable','Robot']]],
+         ['WAN · may be absent for days','Site LAN · Wi-Fi · BLE mesh'],true)}
+${cloudTier('Cloud: where knowledge and models are built, not served',
+  [['Embedding pipeline','Docs to vectors'],['Model registry','Quantized artifacts']],
+  'Couchbase Server','Corpus + vector index','Sync Gateway','Channel per site / role',
+  [['Eval &amp; feedback','Answer quality'],['Curation','Source-of-truth docs']],false)}
+${trunk([SPINE_L,SPINE_R],[0,1])}
+${step(575,TRUNK_Y,1)}
+${T(MID+22,B1[1]-12,'Push the index and model down, pull captures back up.','note')}
+${stackL('Site A · connected','Couchbase Server','Site vector subset','Sync Gateway','Device channels')}
+${blu(175,ROW1,200,ROW1H,'Local LLM runtime','llama.cpp · quantized')}
+${app(175,ROW2,200,ROW2H,'Retrieval service','Vector search in CBL')}
+${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
+${stackR('Site B','Couchbase Server','Seeded at deploy, weeks offline','Sync Gateway','Device channels')}
+${blu(880,ROW1,280,ROW1H,'Local LLM runtime','Same artifact, no cloud')}
+${app(880,ROW2,280,ROW2H,'Retrieval service','Vector search in CBL')}
+${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
+${T(MID+22,ROW2+ROW2H+24,'No inference call ever leaves the site.','lbl')}
+${dev(175,'Field handheld','CBL + vector')}${dev(335,'Wearable','CBL + vector')}${dev(495,'Inspection drone','CBL + vector')}
+${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,2)}
+${Tc(405,708,'On-device retrieval when even the site server is out of range','note')}
+${dev(690,'Technician','CBL + vector')}${dev(850,'Robot','CBL + vector')}${dev(1010,'Sensor hub','CBL')}
+${upToBus([760,SPINE_R])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,4)}
+${p2p(830,850)}${p2p(990,1010)}
+${step(965,676,3)}${Tc(920,708,'P2P: devices share new captures, sync up later','lbl')}
+</svg>`;
+
+/* ================= copy ================= */
+const data=[
+ {id:'retail',tab:'Retail · POS',h:'Retail point of sale',
+  usecase:'Retail POS splits into two patterns, and the split comes down to where the intelligence sits. A grocery or restaurant lane has to keep ringing up sales through a dropped connection, so it runs Couchbase Lite and can fall back to peer-to-peer if the store server goes down. A big-box or apparel checkout usually doesn\u2019t need that: one well-run edge server can carry the whole floor, so the terminal itself stays thin. Both feed the same central pricing and inventory pipeline underneath.',
+  metrics:[['2','patterns, one pipeline'],['0','offline downtime, food'],['1','edge server, either way']],
+  svg:retail,
+  flow:['Food-retail lanes write to Couchbase Lite first. The basket, the tender, the inventory decrement all land locally, and the store edge server picks it up from there. Some thin-format stores skip that edge server altogether and point Couchbase Lite straight at the cloud Sync Gateway.',
+    'If the store server drops, the lanes don\u2019t wait for it. They sync with each other directly over the LAN or BLE, so loyalty balances and stock counts stay in agreement across registers.',
+    'Product-retail terminals are simpler by design. Checkout and price-check devices only talk to the store\u2019s edge server over the LAN, there\u2019s no database on the terminal itself, and nothing to reconcile if that link hiccups.',
+    'Either way, the store settles up with the cloud through Sync Gateway: sales and stock replicate up, pricing and promotions replicate down, all scoped to a channel per store so no device pulls more catalog than it needs.'],
+  why:['Which client you use follows the vertical, not a fixed rule. Couchbase Lite where the lane has to survive on its own, a thin client where the edge server is already doing that job.',
+    'Conflict resolution isn\u2019t left to chance on the Couchbase Lite side. A custom resolver merges inventory decrements instead of letting the last write win.',
+    'Channels handle the filtering for both patterns, so a store only ever pulls its own assortment.',
+    'One schema sits underneath both client shapes. Merchandising and pricing maintain a single integration, not two.'],
+  build:['<code>store_id</code> channel per location, <code>region</code> channel for pricing',
+   'Custom conflict resolver on <code>inventory.on_hand</code> for the food-retail path',
+   'Delta sync on the product catalog, since the full catalog over WAN adds up fast',
+   'Demo: an Android or iOS lane running Couchbase Lite next to a thin terminal client, both hitting the same edge server']},
+
+ {id:'mfg',tab:'Manufacturing',h:'Plant floor and OT',
+  usecase:'Work orders and the bill of materials come down from MES. Cycle counts, scrap events, and inspection results go back up. None of that can pause for a bad WAN link, and because the plant network sits behind its own segment, the plant edge server is often the highest tier a line device can even reach.',
+  metrics:[['30d','local retention'],['40','plants, one pattern'],['0','cloud dependency']],
+  svg:mfg,
+  flow:['Line devices write to Couchbase Lite first, before anything leaves the device: HMIs, PLC gateways running CBL Java or C, inspection cameras.',
+    'Lines sync up to the plant edge. A Couchbase Server on-site keeps 30 days of history, so edge inference and the historian bridge can query it without waiting on the cloud.',
+    'A cell of devices can keep syncing with each other even while the plant server is offline for maintenance.',
+    'The plant reports up to corporate over Sync Gateway, one channel per plant, feeding OEE dashboards, fleet benchmarking, and whatever\u2019s retraining the defect model.'],
+  why:['The plant keeps running through a WAN cut. Production data piles up locally and reconciles once the link comes back, instead of stalling the line.',
+    'Defect scoring reads straight off the plant-local Couchbase Server, with no round trip to the cloud.',
+    'CBL Java and CBL C mean the same sync engine runs on an industrial PC or a PLC gateway, not just a phone.',
+    'Forty plants, one pattern: channels plus a per-plant Sync Gateway config, instead of forty one-off integrations.'],
+  build:['<code>plant_id</code> and <code>line_id</code> channels',
+   'CBL Java on the PLC gateway, CBL .NET on the HMI',
+   'TTL on raw telemetry at the edge; only the aggregates replicate up',
+   'Demo: two HMI instances and a simulated PLC feed']},
+
+ {id:'hosp',tab:'Hospitality · Cruise',h:'Cruise ship operations',
+  usecase:'A ship is about as disconnected as an edge gets. It sails with a full copy of the sailing\u2019s data and only reconciles with shore when it\u2019s in port or paying for satellite time. Every bar tab, folio charge, muster scan, and concierge question has to resolve on its own, with no shore connection in the loop.',
+  metrics:[['7d','offline at sea'],['1','onboard source of truth'],['Δ','delta sync only']],
+  svg:hosp,
+  flow:['Crew tablets, bar terminals, and cabin panels all carry Couchbase Lite and write to the ship\u2019s own cluster.',
+    'At sea, that onboard cluster is the source of truth. POS, folio, muster, and the AI concierge all read and write against it directly.',
+    'Ashore, devices don\u2019t even need the ship. Excursion scanners and guide tablets sync peer-to-peer on the dock, then reconcile once everyone\u2019s back aboard.',
+    'Shore reconciliation happens in port or over VSAT, with delta sync and channel scoping keeping the metered bill from getting out of hand.'],
+  why:['Built for days offline, not seconds. The ship holds a real replica of the sailing\u2019s data, updated locally the whole time it\u2019s at sea.',
+    'Delta sync sends changed fields, not whole documents, which matters when the link is satellite time you\u2019re paying for.',
+    'Vector search running onboard lets the concierge answer from the local corpus without placing a shore call.',
+    'Channels are scoped by role, so a guest device never sees crew or manifest data.'],
+  build:['<code>sailing_id</code>, <code>role</code>, and <code>cabin_id</code> channels',
+   'Delta sync enabled on the shore replication',
+   'CBL vector index for the onboard concierge',
+   'Demo surface: guest app plus crew tablet, simulate leaving port']},
+
+ {id:'air',tab:'Transportation · Airline',h:'Airline cabin and station',
+  usecase:'Two edges, and they don\u2019t look alike. The aircraft carries exactly one flight\u2019s worth of state through a satcom-metered leg. The station carries 48 hours of departures across gate, ramp, and boarding. In both places, crew and agents are making calls that can\u2019t wait for the core system to catch up.',
+  metrics:[['2','edge types'],['1','flight per aircraft node'],['Δ','satcom delta sync']],
+  svg:air,
+  flow:['Crew iPads write in the cabin: meal choices, upsells, seat changes, cabin defects, all land in Couchbase Lite as they happen.',
+    'Purser and FA iPads sync with each other peer-to-peer, so meal and upsell state stays consistent aisle to aisle, independent of the aircraft server.',
+    'At the gate, agents write against the station\u2019s Couchbase Server: standby lists, upgrades, boarding scans.',
+    'Ramp reads the load sheet off that same station cluster rather than the core, since weight and balance can\u2019t wait on a WAN round trip.',
+    'The aircraft reconciles with the core over satcom, delta sync, one channel per flight. Stations do the same over regular broadband with a station-scoped channel.'],
+  why:['Two edge profiles, one underlying pattern. Aircraft and station really only differ in channel scope and how often they sync.',
+    'Delta sync and tight channels keep the metered satcom bill tracking actual change, not document size.',
+    'A disruption is a write-heavy event, and local-first means rebooking and reseating keep working even while the core is swamped.',
+    'The IFE catalog and manifest get pre-loaded on the ground, not pulled down mid-flight.'],
+  build:['<code>flight_id</code> channel on the aircraft, <code>station_id</code> on the ground',
+   'Delta sync mandatory on the satcom replication',
+   'Purge flight docs post-arrival to bound the aircraft dataset',
+   'Demo surface: two iPads over P2P, toggle a simulated satcom link']},
+
+ {id:'edgeai',tab:'Edge AI',h:'Edge AI and on-device retrieval',
+  usecase:'The cloud is where the knowledge and the models get built, not where they get served. Inference and retrieval both have to happen at the edge, which means the vector index needs to live right next to the model, whether that\u2019s a site server or the device itself.',
+  metrics:[['0','inference calls to cloud'],['weeks','fully disconnected'],['1','vector index, everywhere']],
+  svg:edgeai,
+  flow:['Embeddings and quantized model artifacts replicate down to site clusters over Sync Gateway, scoped by channel per site and role.',
+    'Devices retrieve locally. Vector search running in Couchbase Lite works on a handheld, a wearable, or a robot, even out of range of the site server.',
+    'New captures, photos, readings, annotations, spread across the device mesh peer-to-peer first, and only sync up once a link shows up.',
+    'Captures and answer-quality signals eventually replicate back to the cloud, closing the loop for reindexing and evaluation.'],
+  why:['Vector search built into Couchbase Lite means there\u2019s no separate embedded vector store to ship and keep running.',
+    'Data doesn\u2019t leave the site: both the retrieval corpus and the inference call stay local, which is usually the actual requirement here, not just a nice-to-have.',
+    'Seeding at deploy time works even for sites that will never get a link at all.',
+    'The index has the same shape in the cloud, on the site server, and on the device, so nothing has to be re-modeled per tier.'],
+  build:['<code>site_id</code> and <code>role</code> channels for corpus scoping',
+   'CBL vector index, quantized embeddings to fit device storage',
+   'llama.cpp or Core ML for the runtime, CBL for retrieval',
+   'Demo surface: iOS or Raspberry Pi, airplane mode, ask a question']}
+];
+
+const nav=document.getElementById('nav'), main=document.getElementById('main');
+data.forEach((d,i)=>{
+  const b=document.createElement('button');
+  b.textContent=d.tab; b.className=i===0?'on':'';
+  b.onclick=()=>{[...nav.children].forEach(c=>c.classList.remove('on'));b.classList.add('on');
+    [...main.children].forEach(c=>c.classList.remove('on'));document.getElementById(d.id).classList.add('on');};
+  nav.appendChild(b);
+  const el=document.createElement('div');
+  el.className='panel'+(i===0?' on':''); el.id=d.id;
+  el.innerHTML=`
+    <div class="phead">
+      <div class="t"><h2>${d.h}</h2><p class="usecase">${d.usecase}</p></div>
+      <div class="metrics">${d.metrics.map(m=>`<div class="metric"><div class="n">${m[0]}</div><div class="l">${m[1]}</div></div>`).join('')}</div>
+    </div>
+    <div class="diagram">${d.svg}</div>
+    <div class="cols">
+      <div class="card"><h3>Data flow</h3><ol>${d.flow.map(x=>`<li>${x}</li>`).join('')}</ol></div>
+      <div class="card"><h3>Why Couchbase</h3><ul>${d.why.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+      <div class="card"><h3>Build notes</h3><ul>${d.build.map(x=>`<li>${x}</li>`).join('')}</ul></div>
+    </div>`;
+  main.appendChild(el);
+});
+
+})();
+</script>
+</body>
+</html>
