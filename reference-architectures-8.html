@@ -69,7 +69,7 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--
 <header>
   <p class="eyebrow">Innovate at the Edge · October launch</p>
   <h1>Reference architectures by vertical</h1>
-  <p class="sub">Six industries, one underlying topology: cloud, edge, client. What changes from one to the next is where writes actually happen and what still has to work when the network doesn't.</p>
+  <p class="sub">Most Couchbase Mobile apps sync devices straight to the cloud, and the first tab shows that pattern. The other tabs show when a location needs its own edge tier, and what changes when it does.</p>
 </header>
 <div class="flood"></div>
 
@@ -234,6 +234,36 @@ const stackR=(t,c1,c2,s1,s2)=>T(MID+22,286,t,'loc')+cbs(700,ROW1,150,ROW1H,c1,c2
 const ES_H=ROW2+ROW2H-ROW1;
 const esL=(t,s)=>T(LBL+22,286,t,'loc')+sgw(430,ROW1,150,ES_H,'Edge Server',s);
 const esR=(t,s)=>T(MID+22,286,t,'loc')+sgw(700,ROW1,150,ES_H,'Edge Server',s);
+
+/* ================= 0. FRONTLINE AND FIELD SERVICE ================= */
+const front=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella App Services','or self-managed']],
+          [EDGE[0],'NO EDGE TIER',['Devices sync','straight to the cloud']],
+          [CLIENT[0],'CLIENT',['Phone · tablet','Rugged handheld']]],
+         ['Internet','Wi-Fi · cellular'],true)}
+${cloudTier('Cloud: the system of record for every app',
+  [['Work orders','Scheduling · dispatch'],['Asset records','Equipment · sites']],
+  'Couchbase Server','App data','Sync Gateway','Channel per user / team',
+  [['Identity','Sign-in · user roles'],['Analytics','Reporting']],false)}
+${p([[640,178],[640,TRUNK_Y]],{ends:'none'})}
+${p([[SPINE_L,TRUNK_Y],[SPINE_R,TRUNK_Y]],{ends:'none'})}
+${step(575,TRUNK_Y,3)}
+${T(LBL+22,286,'Frontline workers','loc')}
+${T(LBL+22,ROW1+18,'Store associates, nurses, hotel and warehouse staff.','note')}
+${T(LBL+22,ROW1+34,'Inside a building, often with patchy Wi-Fi.','note')}
+${T(LBL+22,ROW2+ROW2H+24,'Nothing to install on site.','lbl')}
+${T(MID+22,286,'Field service','loc')}
+${T(SPINE_R+16,ROW1+18,'Technicians in utilities, telecom,','note')}
+${T(SPINE_R+16,ROW1+34,'and equipment repair.','note')}
+${T(SPINE_R+16,ROW1+50,'Remote sites, no coverage for hours.','note')}
+${T(SPINE_R+16,ROW2+ROW2H+24,'No server at the site.','lbl')}
+${dev(175,'Associate phone','Couchbase Lite')}${dev(335,'Nurse tablet','Couchbase Lite')}${dev(495,'Warehouse scanner','Couchbase Lite')}
+${upToBus([245,405,565])}${p([[SPINE_L,BUS],[SPINE_L,TRUNK_Y]],{ends:'none'})}${step(SPINE_L,B2[0]+30,1)}
+${Tc(405,716,'Writes land on the device first, sync when Wi-Fi returns','lbl')}
+${dev(690,'Technician tablet','Couchbase Lite')}${dev(850,'Inspector phone','Couchbase Lite')}${dev(1010,'Rugged handheld','Couchbase Lite')}
+${upToBus([760,920,1080])}${p([[SPINE_R,BUS],[SPINE_R,TRUNK_Y]],{ends:'none',dash:1})}${step(SPINE_R,B2[0]+30,2)}
+${Tc(920,716,'Hours offline at a site, sync when coverage returns','lbl')}
+</svg>`;
 
 /* ================= 1. RETAIL ================= */
 const retail=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
@@ -438,6 +468,20 @@ ${Tc(920,716,'Site B keeps working for weeks with no uplink','lbl')}
 
 /* ================= copy ================= */
 const data=[
+ {id:'front',tab:'Frontline · Field service',h:'Frontline and field service apps',
+  usecase:'This is the most common Couchbase Mobile deployment, and the simplest. An app on a phone or tablet runs Couchbase Lite and syncs directly with Sync Gateway or Capella App Services in the cloud. There\u2019s no server on site. The app reads and writes against its local database, keeps working offline, and syncs whenever it has a connection. Frontline workers inside a building with patchy Wi-Fi and field technicians at remote sites use exactly the same architecture.',
+  svg:front,
+  flow:['Frontline workers, such as store associates, nurses, and warehouse staff, read and write to Couchbase Lite on their device. The app keeps working through Wi-Fi dead spots and syncs as soon as the connection comes back.',
+    'Field technicians carry the data for their jobs on the device: work orders, asset history, manuals, and checklists. They can work at a remote site for hours with no coverage, then sync photos, readings, and completed jobs once they\u2019re back in range.',
+    'Sync Gateway or Capella App Services syncs each device with the cloud, scoped by channel so each person only gets the data for their own team, site, or jobs. The cloud connects to the customer\u2019s systems for work orders, assets, and scheduling.'],
+  why:['The simplest architecture: devices sync straight to the cloud, with no server to install or run on site.',
+    'Offline-first by design. The app reads and writes locally, so it\u2019s fast and keeps working without a connection.',
+    'Channels give each person only the data they need, which keeps devices light and data private.',
+    'Couchbase Lite runs on iOS, Android, and .NET, so one sync setup covers a mixed device fleet.'],
+  build:['Couchbase Lite in the mobile app, syncing with Sync Gateway or Capella App Services',
+   'Channels per user, team, or site',
+   'Add an edge tier only when a location has to keep working as a group without the cloud. The other tabs show when that applies.']},
+
  {id:'retail',tab:'Retail · POS',h:'Retail point of sale',
   usecase:'Two ways to keep checkout running when a store\u2019s internet connection drops, and either one works for any kind of store. Option A puts nothing in the back office: POS lanes running Couchbase Lite sync with each other over the store network, and with the cloud whenever the uplink is up. Option B adds an Edge Server in the store. It syncs with Couchbase Lite apps and serves REST APIs to web clients such as kiosks and fixed POS terminals, so one store can run both kinds of client. Both options sync into the same central pricing and inventory systems.',
   svg:retail,
@@ -502,7 +546,7 @@ const data=[
   svg:bank,
   flow:['Teller workstations write to Couchbase Lite and sync with the branch\u2019s Edge Server over the LAN.',
     'The lobby kiosk is a web client. It reads and writes through the Edge Server\u2019s REST APIs.',
-    'Field agents run Couchbase Lite on their tablets and sync straight to the cloud Sync Gateway whenever there\u2019s coverage. Each tablet only holds the customers assigned to that agent.',
+    'Field agents run Couchbase Lite on their tablets and sync straight to the cloud Sync Gateway whenever there\u2019s coverage. Each tablet only holds the customers assigned to that agent. This is the same pattern as the Frontline and field service tab.',
     'The branch Edge Server syncs with the cloud. Captured transactions wait in a store-and-forward queue until the core posts them, and the result syncs back to the branch.',
     'In the field, with no server nearby, an agent hands captured applications to a supervisor\u2019s tablet over P2P for review.'],
   why:['The edge never becomes a second ledger. It captures transactions, and the core posts them.',
