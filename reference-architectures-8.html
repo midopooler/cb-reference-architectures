@@ -62,6 +62,11 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--
 .lbl{font:600 10px 'Open Sans';fill:#EC1218}
 .step{font:700 10px 'Open Sans';fill:#fff}
 .cbl{font:700 9.5px 'Open Sans';fill:#EC1218}
+.choose{max-width:1400px;margin:0 auto 30px;padding:0 48px}
+.choose h3{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cb-red);margin:0 0 12px}
+.choose-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.choose-grid div{border:1px solid var(--border);border-radius:12px;padding:16px 18px;font-size:14px;line-height:1.6}
+.choose-grid b{display:block;color:var(--cb-black);margin-bottom:4px}
 </style>
 </head>
 <body>
@@ -72,6 +77,15 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--
   <p class="sub">Most Couchbase Mobile apps sync devices straight to the cloud, and the first tab shows that pattern. The other tabs show when a location needs its own edge tier, and what changes when it does.</p>
 </header>
 <div class="flood"></div>
+<div class="choose">
+  <h3>Choosing the edge tier</h3>
+  <div class="choose-grid">
+    <div><b>No edge tier: most apps</b>Devices run Couchbase Lite and sync straight to Sync Gateway or Capella App Services. Add peer-to-peer sync only when devices need to share data with each other offline.</div>
+    <div><b>Edge Server</b>One site with a modest number of devices that has to keep working as a group when its cloud link drops, such as a store, a bank branch, or an aircraft. It syncs with Sync Gateway in the cloud.</div>
+    <div><b>Couchbase Server and Sync Gateway</b>A large site with heavy traffic, many devices, or days of data to hold, such as an airport hub, a plant, or a ship. It syncs with the cloud through ISGR.</div>
+  </div>
+</div>
+
 
 <nav id="nav"></nav>
 <main id="main"></main>
@@ -95,10 +109,8 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--
     <div><dt>4G</dt><dd>Fourth-generation cellular network</dd></div>
     <div><dt>AI</dt><dd>Artificial Intelligence</dd></div>
     <div><dt>API</dt><dd>Application Programming Interface</dd></div>
-    <div><dt>BLE</dt><dd>Bluetooth Low Energy</dd></div>
     <div><dt>BOM</dt><dd>Bill of Materials</dd></div>
     <div><dt>CBL</dt><dd>Couchbase Lite, the embedded on-device database and sync engine</dd></div>
-    <div><dt>Core ML</dt><dd>Apple's on-device machine learning framework</dd></div>
     <div><dt>DCS</dt><dd>Departure Control System</dd></div>
     <div><dt>DMZ</dt><dd>Demilitarized zone, the network segment between plant OT and corporate IT</dd></div>
     <div><dt>DR</dt><dd>Disaster Recovery</dd></div>
@@ -108,10 +120,10 @@ code{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:var(--
     <div><dt>HTTP</dt><dd>Hypertext Transfer Protocol</dd></div>
     <div><dt>IATA</dt><dd>International Air Transport Association, which assigns airport codes</dd></div>
     <div><dt>IFE</dt><dd>In-Flight Entertainment</dd></div>
+    <div><dt>ISGR</dt><dd>Inter-Sync Gateway Replication, which syncs one Sync Gateway with another</dd></div>
     <div><dt>IT</dt><dd>Information Technology</dd></div>
     <div><dt>KYC</dt><dd>Know Your Customer, the identity checks a bank runs when onboarding a customer</dd></div>
     <div><dt>LAN</dt><dd>Local Area Network</dd></div>
-    <div><dt>LLM</dt><dd>Large Language Model</dd></div>
     <div><dt>LTE</dt><dd>Long Term Evolution, the 4G cellular standard</dd></div>
     <div><dt>MES</dt><dd>Manufacturing Execution System</dd></div>
     <div><dt>MPLS</dt><dd>Multiprotocol Label Switching, a private carrier circuit</dd></div>
@@ -235,34 +247,208 @@ const ES_H=ROW2+ROW2H-ROW1;
 const esL=(t,s)=>T(LBL+22,286,t,'loc')+sgw(430,ROW1,150,ES_H,'Edge Server',s);
 const esR=(t,s)=>T(MID+22,286,t,'loc')+sgw(700,ROW1,150,ES_H,'Edge Server',s);
 
-/* ================= 0. FRONTLINE AND FIELD SERVICE ================= */
+/* ================= FIELD SERVICE AND FRONTLINE ================= */
 const front=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
 ${frame([[CLOUD[0],'CLOUD',['Capella App Services','or self-managed']],
           [EDGE[0],'NO EDGE TIER',['Devices sync','straight to the cloud']],
-          [CLIENT[0],'CLIENT',['Phone · tablet','Rugged handheld']]],
-         ['Internet','Wi-Fi · cellular'],true)}
+          [CLIENT[0],'CLIENT',['Tablet · phone','Rugged handheld']]],
+         ['Internet, when available','Local Wi-Fi · cellular'],true)}
 ${cloudTier('Cloud: the system of record for every app',
   [['Work orders','Scheduling · dispatch'],['Asset records','Equipment · sites']],
-  'Couchbase Server','App data','Sync Gateway','Channel per user / team',
+  'Couchbase Server','App data','Sync Gateway','Channels by team or site',
   [['Identity','Sign-in · user roles'],['Analytics','Reporting']],false)}
 ${p([[640,178],[640,TRUNK_Y]],{ends:'none'})}
 ${p([[SPINE_L,TRUNK_Y],[SPINE_R,TRUNK_Y]],{ends:'none'})}
+${step(575,TRUNK_Y,4)}
+${T(LBL+22,286,'Mining crew','loc')}
+${T(LBL+22,ROW1+18,'Underground, no coverage for a whole shift.','note')}
+${T(LBL+22,ROW1+34,'The crew\u2019s devices share data over P2P,','note')}
+${T(LBL+22,ROW1+50,'then sync once they\u2019re back in coverage.','note')}
+${T(LBL+22,ROW2+ROW2H+24,'P2P helps: the crew works as a team.','lbl')}
+${T(MID+22,286,'Adjusters','loc')}
+${T(SPINE_R+16,ROW1+18,'Insurance claims adjusters work alone,','note')}
+${T(SPINE_R+16,ROW1+34,'so there\u2019s nothing to share over P2P.','note')}
+${T(SPINE_R+16,ROW1+50,'Each device syncs straight to the cloud.','note')}
+${T(SPINE_R+16,ROW2+ROW2H+24,'No P2P needed.','lbl')}
+${dev(175,'Crew lead tablet','Couchbase Lite')}${dev(335,'Crew handheld','Couchbase Lite')}${dev(495,'Safety tablet','Couchbase Lite')}
+${upToBus([245,405,565])}${p([[SPINE_L,BUS],[SPINE_L,TRUNK_Y]],{ends:'none',dash:1})}${step(SPINE_L,B2[0]+30,2)}
+${p2p(315,335)}${p2p(475,495)}
+${step(405,688,1)}${Tc(405,716,'P2P: the crew shares readings with no coverage','lbl')}
+${dev(690,'Adjuster tablet','Couchbase Lite')}${dev(850,'Adjuster phone','Couchbase Lite')}${dev(1010,'Adjuster tablet','Couchbase Lite')}
+${upToBus([760,920,1080])}${p([[SPINE_R,BUS],[SPINE_R,TRUNK_Y]],{ends:'none',dash:1})}${step(SPINE_R,B2[0]+30,3)}
+${Tc(920,716,'Each adjuster syncs on their own, no P2P','lbl')}
+</svg>`;
+
+/* ================= AIRLINE ================= */
+const air=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella','Airline core']],
+          [EDGE[0],'EDGE',['Aircraft: Edge Server','Hub: Couchbase Server']],
+          [CLIENT[0],'CLIENT',['Crew iPad','Gate agent','Ramp device']]],
+         ['Ku / Ka satcom · airport network','Cabin Wi-Fi · airport LAN'],true)}
+${cloudTier('Airline core: network operations',
+  [['PSS / DCS','Booking &amp; check-in'],['Crew &amp; ops control','Disruption mgmt']],
+  'Couchbase Server','PNR · manifest · crew','Sync Gateway','Channel per flight / airport',
+  [['Maintenance','Defect &amp; parts'],['Revenue mgmt','Upsell pricing']],false)}
+${p([[640,178],[640,TRUNK_Y]],{ends:'none'})}
+${p([[SPINE_L,TRUNK_Y],[678,TRUNK_Y]],{ends:'none'})}
+${p([[SPINE_L,TRUNK_Y],[SPINE_L,ROW1]],{ends:'end',dash:1})}
+${p([[678,TRUNK_Y],[678,ROW2+ROW2H/2],[700,ROW2+ROW2H/2]],{ends:'end'})}
+${step(575,TRUNK_Y,4)}
+${T(700,B1[0]+20,'Aircraft: Edge Server syncs with Sync Gateway over satcom.','note')}
+${T(700,B1[1]-12,'Airport hub: ISGR to the core.','note')}
+${esL('Aircraft · tail N412UA, in flight','This flight only')}
+${T(LBL+22,303,'Or no box: crew iPads sync P2P, one uploads at the gate.','note')}
+${app(175,ROW1,200,ROW1H,'Cabin services','Upsell · meals · seats')}
+${app(175,ROW2,200,ROW2H,'IFE catalog','Loaded at base')}
+${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
+${stackR('','Couchbase Server','Hub flights','Sync Gateway','Gate + ramp channels')}
+${T(MID+36,286,'Airport hub · ORD','loc')}
+${T(MID+36,303,'Smaller airports can run an Edge Server.','note')}
+${app(880,ROW1,130,ROW1H,'Gate &amp; boarding','Standby · upgrades')}
+${app(1030,ROW1,130,ROW1H,'Load control','Issues the load sheet')}
+${gl(ROW1+ROW1H/2,850,880)}${gl(ROW1+ROW1H/2,1010,1030)}
+${step(1095,ROW1+ROW1H+16,3)}
+${dev(175,'Purser iPad','Couchbase Lite')}${dev(335,'FA iPad','Couchbase Lite')}${dev(495,'FA iPad','Couchbase Lite')}
+${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${Tc(405,716,'Crew iPads keep working for the whole flight','lbl')}
+${dev(690,'Gate agent','Couchbase Lite')}${dev(850,'Ramp handheld','Couchbase Lite')}${dev(1010,'Boarding scanner','Couchbase Lite')}
+${upToBus([760,920,1080])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,2)}
+${Tc(920,716,'Gate and ramp keep working while the core is busy','lbl')}
+</svg>`;
+
+/* ================= CRUISE ================= */
+const cluster=(x,y,w,h,l,s)=>`<rect x="${x+12}" y="${y-12}" width="${w}" height="${h}" rx="6" fill="#FDE7E7" stroke="#EC1218" stroke-width="1.2"/>`
+  +`<rect x="${x+6}" y="${y-6}" width="${w}" height="${h}" rx="6" fill="#FDE7E7" stroke="#EC1218" stroke-width="1.2"/>`+cbs(x,y,w,h,l,s);
+const hosp=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'SHORE',['Cloud','Capella']],
+          [EDGE[0],'SHIP',['Onboard servers','Sails offline']],
+          [CLIENT[0],'ON BOARD',['Crew and guest','devices']]],
+         ['Satellite / port Wi-Fi · metered','Ship LAN · Wi-Fi'],false)}
+${cloudTier('Shoreside: reservations, loyalty, revenue',
+  [['Reservation system','Manifest &amp; itinerary'],['Revenue &amp; folio','Post-cruise settle']],
+  'Couchbase Server','Bookings · profiles','Sync Gateway','Channel per sailing',
+  [['Loyalty','Cross-fleet profile'],['Fleet analytics','Voyage performance']],false)}
+<rect x="160" y="268" width="1010" height="452" rx="12" fill="none" stroke="#97000F" stroke-width="1.5" stroke-dasharray="3 5"/>
+<text class="lbl" x="1158" y="288" text-anchor="end">ON BOARD: WORKS WITH NO SHORE CONNECTION</text>
+${p([[640,178],[640,TRUNK_Y],[415,TRUNK_Y],[415,ROW2+ROW2H/2],[430,ROW2+ROW2H/2]],{dash:1,ends:'end'})}
+${step(530,TRUNK_Y,2)}
+${T(MID+22,B1[1]-12,'Ship to shore: ISGR, in port or over VSAT.','note')}
+${T(LBL+22,286,'MS Meridian','loc')}
+${cluster(430,ROW1,150,ROW1H,'Couchbase Server','Multi-node cluster')}
+${sgw(430,ROW2,150,ROW2H,'Sync Gateway','Ship sync')}${p([[SPINE_L,ROW1+ROW1H],[SPINE_L,ROW2]])}
+${T(620,ROW1+30,'The ship holds the full sailing\u2019s data and is the','note')}
+${T(620,ROW1+46,'only source of truth for days at sea, so it runs','note')}
+${T(620,ROW1+62,'Couchbase Server as a multi-node cluster.','note')}
+${dev(175,'Crew tablet','Couchbase Lite')}${dev(335,'POS terminal','Couchbase Lite')}${dev(495,'Guest app','Couchbase Lite')}${dev(655,'Cabin panel','Couchbase Lite')}${dev(815,'Muster scanner','Couchbase Lite')}
+${upToBus([245,405,565,725,885])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${Tc(530,712,'Every onboard transaction resolves without shore','lbl')}
+</svg>`;
+
+/* ================= BANKING ================= */
+const bank=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Bank data center','or Capella']],
+          [EDGE[0],'BRANCH EDGE',['Edge Server','Branch back office']],
+          [CLIENT[0],'CLIENT',['Teller · advisor','Lobby kiosk']]],
+         ['WAN · branch link / 4G backup','Branch LAN · Wi-Fi'],false)}
+${cloudTier('Bank core: ledger of record, customer, risk',
+  [['Core banking','Ledger of record'],['KYC &amp; onboarding','Customer profile']],
+  'Couchbase Server','Customer · product · forms','Sync Gateway','Channel per branch',
+  [['Fraud &amp; risk','Scoring rules'],['Regulatory reporting','Audit trail']],false)}
+${p([[640,178],[640,TRUNK_Y],[SPINE_L,TRUNK_Y],[SPINE_L,ROW1]],{ends:'end'})}
 ${step(575,TRUNK_Y,3)}
-${T(LBL+22,286,'Frontline workers','loc')}
-${T(LBL+22,ROW1+18,'Store associates, nurses, hotel and warehouse staff.','note')}
-${T(LBL+22,ROW1+34,'Inside a building, often with patchy Wi-Fi.','note')}
+${T(MID+22,B1[1]-12,'Core banking stays the ledger. The branch captures, the core posts.','note')}
+${esL('Branch 214','Sync + REST APIs')}
+${app(620,ROW1,175,ROW1H,'Teller services','Cash · receipts')}
+${app(815,ROW1,175,ROW1H,'Queue &amp; appointments','Branch lobby')}
+${gl(ROW1+ROW1H/2,580,620)}${gl(ROW1+ROW1H/2,795,815)}
+${T(620,ROW2+22,'If the link to core banking drops, the Edge Server keeps','note')}
+${T(620,ROW2+38,'captured transactions until the core posts them.','note')}
+${dev(175,'Teller workstation','Couchbase Lite')}${dev(335,'Advisor tablet','Couchbase Lite')}${thin(495,'Lobby kiosk','Web client')}
+${upToBus([245,405])}${p([[405,BUS],[SPINE_L,BUS]],{ends:'none'})}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
+${p([[565,DEV],[565,ROW2+ROW2H]],{k:'g',ends:'end'})}${step(565,BUS,2)}
+${Tc(405,716,'Tellers keep serving customers when the link to core banking drops','lbl')}
+</svg>`;
+
+/* ================= HEALTHCARE ================= */
+const health=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella App Services','or self-managed']],
+          [EDGE[0],'NO EDGE TIER',['Tablets sync','straight to the cloud']],
+          [CLIENT[0],'CLIENT',['Clinic tablets']]],
+         ['Internet, when available','Local hotspot · no internet'],false)}
+${cloudTier('Cloud: patient records and clinic planning',
+  [['Health records','Patient history'],['Scheduling','Clinic days · staff']],
+  'Couchbase Server','Clinic data','Sync Gateway','Channel per clinic',
+  [['Pharmacy stock','Medicines'],['Reporting','Public health']],false)}
+${p([[640,178],[640,TRUNK_Y],[SPINE_L,TRUNK_Y]],{ends:'none'})}
+${p([[SPINE_L,TRUNK_Y],[SPINE_L,BUS]],{ends:'none',dash:1})}
+${T(LBL+22,286,'Pop-up clinic','loc')}
+${T(LBL+22,ROW1+18,'A van or tent in a village, often with no coverage.','note')}
+${T(LBL+22,ROW1+34,'Tablets share records over P2P on a local hotspot.','note')}
 ${T(LBL+22,ROW2+ROW2H+24,'Nothing to install on site.','lbl')}
-${T(MID+22,286,'Field service','loc')}
-${T(SPINE_R+16,ROW1+18,'Technicians in utilities, telecom,','note')}
-${T(SPINE_R+16,ROW1+34,'and equipment repair.','note')}
-${T(SPINE_R+16,ROW1+50,'Remote sites, no coverage for hours.','note')}
-${T(SPINE_R+16,ROW2+ROW2H+24,'No server at the site.','lbl')}
-${dev(175,'Associate phone','Couchbase Lite')}${dev(335,'Nurse tablet','Couchbase Lite')}${dev(495,'Warehouse scanner','Couchbase Lite')}
+${T(620,286,'Back in coverage','loc')}
+${T(620,ROW1+18,'When the team is back in coverage, any tablet syncs','note')}
+${T(620,ROW1+34,'the day\u2019s records to the cloud and picks up the','note')}
+${T(620,ROW1+50,'patient list for the next clinic.','note')}
+${dev(175,'Registration tablet','Couchbase Lite')}${dev(335,'Clinician tablet','Couchbase Lite')}${dev(495,'Pharmacy tablet','Couchbase Lite')}
+${upToBus([245,405,565])}${step(SPINE_L,B2[0]+30,2)}
+${p2p(315,335)}${p2p(475,495)}
+${step(405,688,1)}${Tc(405,716,'P2P: the clinic team shares patient records with no network','lbl')}
+</svg>`;
+
+/* ================= CONSUMER APPS ================= */
+const b2c=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella App Services','or self-managed']],
+          [EDGE[0],'NO EDGE TIER',['Phones sync','straight to the cloud']],
+          [CLIENT[0],'CLIENT',['Consumer phones','and tablets']]],
+         ['Internet','Cellular · Wi-Fi'],true)}
+${cloudTier('Cloud: catalog, accounts, and orders',
+  [['Product catalog','Items · prices'],['Accounts','Profiles · sign-in']],
+  'Couchbase Server','App data','Sync Gateway','Per-user + shared channels',
+  [['Orders','Checkout · history'],['Analytics','Usage · crashes']],false)}
+${p([[640,178],[640,TRUNK_Y]],{ends:'none'})}
+${p([[SPINE_L,TRUNK_Y],[SPINE_R,TRUNK_Y]],{ends:'none'})}
+${step(575,TRUNK_Y,3)}
+${T(LBL+22,286,'Shopping and loyalty apps','loc')}
+${T(LBL+22,ROW1+18,'Catalog, wishlist, and loyalty card load instantly,','note')}
+${T(LBL+22,ROW1+34,'even on a weak signal inside a store.','note')}
+${T(LBL+22,ROW2+ROW2H+24,'No spinners, no blank screens.','lbl')}
+${T(MID+22,286,'Travel apps','loc')}
+${T(SPINE_R+16,ROW1+18,'Tickets and boarding passes open in','note')}
+${T(SPINE_R+16,ROW1+34,'airplane mode or underground.','note')}
+${T(SPINE_R+16,ROW2+ROW2H+24,'Works with no signal at all.','lbl')}
+${dev(175,'iPhone app','Couchbase Lite')}${dev(335,'Android app','Couchbase Lite')}${dev(495,'Tablet app','Couchbase Lite')}
 ${upToBus([245,405,565])}${p([[SPINE_L,BUS],[SPINE_L,TRUNK_Y]],{ends:'none'})}${step(SPINE_L,B2[0]+30,1)}
-${Tc(405,716,'Writes land on the device first, sync when Wi-Fi returns','lbl')}
-${dev(690,'Technician tablet','Couchbase Lite')}${dev(850,'Inspector phone','Couchbase Lite')}${dev(1010,'Rugged handheld','Couchbase Lite')}
+${Tc(405,716,'Reads come from the phone, so the app opens instantly','lbl')}
+${dev(690,'Ticket wallet','Couchbase Lite')}${dev(850,'Boarding pass','Couchbase Lite')}${dev(1010,'Trip planner','Couchbase Lite')}
 ${upToBus([760,920,1080])}${p([[SPINE_R,BUS],[SPINE_R,TRUNK_Y]],{ends:'none',dash:1})}${step(SPINE_R,B2[0]+30,2)}
-${Tc(920,716,'Hours offline at a site, sync when coverage returns','lbl')}
+${Tc(920,716,'Changes save on the phone and sync when the signal returns','lbl')}
+</svg>`;
+
+/* ================= EDGE AI ================= */
+const edgeai=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
+${frame([[CLOUD[0],'CLOUD',['Capella','or self-managed']],
+          [EDGE[0],'ON DEVICE',['No edge tier','Everything runs locally']],
+          [CLIENT[0],'CLIENT',['Phone · tablet','Laptop']]],
+         ['Internet',''],false)}
+${cloudTier('Cloud: build the knowledge, sync it down',
+  [['Source documents','Manuals · procedures'],['Embedding pipeline','Documents to vectors']],
+  'Couchbase Server','Content + embeddings','Sync Gateway','Channels by team or site',
+  [['Cloud AI','Used when connected'],['Model distribution','Ships models to devices']],false)}
+${p([[640,178],[640,TRUNK_Y],[245,TRUNK_Y]],{ends:'none'})}
+${p([[245,TRUNK_Y],[245,BUS]],{ends:'none',dash:1})}${step(245,B2[0]+30,1)}
+${T(330,286,'Inside each device: answering a question with no connection','loc')}
+${app(330,330,165,64,'App','User asks a question')}
+${app(525,330,165,64,'Embedding model','Embeds the question')}
+${box(720,330,165,64,'Couchbase Lite','Vector search, local data','dev')}
+${app(915,330,165,64,'Local language model','Writes the answer')}
+${p([[495,362],[525,362]],{k:'g',w:1.5,ends:'end'})}${p([[690,362],[720,362]],{k:'g',w:1.5,ends:'end'})}${p([[885,362],[915,362]],{k:'g',w:1.5,ends:'end'})}
+${step(802,418,2)}
+${T(330,450,'When the device is connected, the app can still use cloud AI as well.','note')}
+${p([[1105,CY+CH/2],[1140,CY+CH/2],[1140,DEV+DEVH/2],[635,DEV+DEVH/2]],{k:'g',w:1.5,dash:1,ends:'end'})}${step(1140,B2[0]+30,3)}
+${T(660,DEV+DEVH/2-10,'Models ship with the app or download separately, not through Sync Gateway','note')}
+${dev(175,'Field tablet','CBL + vector search')}${dev(335,'Technician phone','CBL + vector search')}${dev(495,'Rugged laptop','CBL + vector search')}
+${upToBus([245,405,565])}
+${Tc(405,716,'Retrieval and answers work with no connection','lbl')}
 </svg>`;
 
 /* ================= 1. RETAIL ================= */
@@ -310,7 +496,7 @@ const SGW_MID=ROW2+ROW2H/2;
 const mfg=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
 ${frame([[CLOUD[0],'CLOUD',['Capella','Fleet-wide']],
           [EDGE[0],'PLANT EDGE',['Level 3 / DMZ','Industrial PC']],
-          [CLIENT[0],'CLIENT / OT',['PLC gateway','Line HMI','Inspection cam']]],
+          [CLIENT[0],'CLIENT / OT',['Line HMI','Inspector tablet']]],
          ['WAN · plant uplink, assumed unreliable','Plant LAN · OT network segment'],true)}
 ${cloudTier('Corporate: a fleet of 40 plants',
   [['MES / ERP','Work orders · BOM'],['Model training','Defect &amp; anomaly']],
@@ -321,166 +507,39 @@ ${p([[595,TRUNK_Y],[678,TRUNK_Y]],{ends:'none'})}
 ${p([[595,TRUNK_Y],[595,SGW_MID],[580,SGW_MID]],{ends:'end'})}
 ${p([[678,TRUNK_Y],[678,SGW_MID],[700,SGW_MID]],{ends:'end'})}
 ${step(617,TRUNK_Y,3)}
-${T(700,B1[0]+20,'Cloud to plant: Sync Gateway to Sync Gateway replication.','note')}
+${T(700,B1[0]+20,'Cloud to plant: ISGR (Sync Gateway to Sync Gateway).','note')}
 ${T(700,B1[1]-12,'Under about two dozen plants, XDCR between Couchbase Servers also works.','note')}
-${stackL('Plant · Monterrey','Couchbase Server','30d plant history','Sync Gateway','Line sync')}
+${stackL('Plant · Monterrey','Couchbase Server','Plant history','Sync Gateway','Line sync')}
 ${app(175,ROW1,200,ROW1H,'Edge inference','Defect scoring, local')}
 ${gl(ROW1+ROW1H/2,375,430)}${step(402,ROW1+ROW1H/2,2)}
-${stackR('','Couchbase Server','30d plant history','Sync Gateway','Line sync')}
+${stackR('','Couchbase Server','Plant history','Sync Gateway','Line sync')}
 ${T(MID+36,286,'Plant · Pune','loc')}
 ${app(880,ROW1,280,ROW1H,'Edge inference','Same model artifact')}
 ${gl(ROW1+ROW1H/2,850,880)}
-${dev(175,'Line 1 HMI','Couchbase Lite')}${dev(335,'Line 2 HMI','Couchbase Lite')}${dev(495,'PLC gateway','Couchbase Lite Java / C')}
+${dev(175,'Line 1 HMI','Couchbase Lite')}${dev(335,'Line 2 HMI','Couchbase Lite')}${dev(495,'Inspector tablet','Couchbase Lite')}
 ${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
 ${Tc(405,716,'Local writes: cycle counts, scrap events, operator overrides','note')}
-${dev(690,'Line 1 HMI','Couchbase Lite')}${dev(850,'Inspection cam','Couchbase Lite')}${dev(1010,'Tablet','Couchbase Lite')}
+${dev(690,'Line 1 HMI','Couchbase Lite')}${dev(850,'Quality tablet','Couchbase Lite')}${dev(1010,'Supervisor tablet','Couchbase Lite')}
 ${upToBus([760,920,1080])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,1)}
 ${Tc(920,716,'The plant keeps producing through a WAN cut','lbl')}
 </svg>`;
 
-/* ================= 3. HOSPITALITY ================= */
-const hosp=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
-${frame([[CLOUD[0],'CLOUD',['Shoreside','Capella']],
-          [EDGE[0],'SHIP EDGE',['Onboard datacenter','Sails offline']],
-          [CLIENT[0],'CLIENT',['Crew tablet','Guest app','Cabin panel']]],
-         ['Satellite / port Wi-Fi · metered','Ship LAN · Wi-Fi · BLE'],false)}
-${cloudTier('Shoreside: reservations, loyalty, revenue',
-  [['Reservation system','Manifest &amp; itinerary'],['Revenue &amp; folio','Post-cruise settle']],
-  'Couchbase Server','Bookings · profiles','Sync Gateway','Channel per sailing',
-  [['Loyalty','Cross-fleet profile'],['Fleet analytics','Voyage performance']],false)}
-${p([[640,178],[640,TRUNK_Y],[415,TRUNK_Y],[415,ROW2+ROW2H/2],[430,ROW2+ROW2H/2]],{dash:1,ends:'end'})}
-${step(530,TRUNK_Y,4)}
-${T(MID+22,B1[0]+20,'Ship to shore: Sync Gateway to Sync Gateway replication, or XDCR.','note')}
-${T(MID+22,B1[1]-12,'Runs in port or over VSAT, scoped by channel to keep the bill down.','note')}
-${stackL('MS Meridian · at sea','Couchbase Server','Full sailing state','Sync Gateway','Crew, guest, cabin channels')}
-${app(620,ROW1,175,ROW1H,'POS &amp; folio','Bars · spa · excursions')}
-${app(815,ROW1,175,ROW1H,'AI concierge','Local model + CBL vector')}
-${app(1010,ROW1,150,ROW1H,'Digital signage','Menus · schedule')}
-${app(620,ROW2,175,ROW2H,'Muster &amp; safety','Authoritative onboard')}
-${app(815,ROW2,175,ROW2H,'Housekeeping','Cabin status')}
-${gl(ROW1+ROW1H/2,580,620)}${gl(ROW1+ROW1H/2,795,815)}${gl(ROW1+ROW1H/2,990,1010)}
-${gl(ROW2+ROW2H/2,580,620)}${gl(ROW2+ROW2H/2,795,815)}
-${T(1010,ROW2+20,'Holds the real dataset,','note')}${T(1010,ROW2+34,'reconciled in port.','note')}
-${dev(175,'Crew tablet','Couchbase Lite')}${dev(335,'Bar terminal','Couchbase Lite')}${dev(495,'Cabin panel','Couchbase Lite')}
-${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
-${step(405,688,2)}${Tc(405,716,'Every onboard transaction resolves without shore','lbl')}
-${dev(700,'Excursion scanner','Couchbase Lite')}${dev(860,'Guide tablet','Couchbase Lite')}${dev(1020,'Muster reader','Couchbase Lite')}
-${p2p(840,860)}${p2p(1000,1020)}
-${step(930,688,3)}${Tc(930,716,'Ashore, away from the ship: a few devices sync P2P','lbl')}
-</svg>`;
-
-/* ================= 4. AIRLINE ================= */
-const air=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
-${frame([[CLOUD[0],'CLOUD',['Capella','Airline core']],
-          [EDGE[0],'EDGE',['Edge Server','Aircraft · station']],
-          [CLIENT[0],'CLIENT',['Crew iPad','Gate agent','Ramp device']]],
-         ['Ku / Ka satcom · station broadband','Cabin Wi-Fi · gate LAN'],true)}
-${cloudTier('Airline core: network operations',
-  [['PSS / DCS','Booking &amp; check-in'],['Crew &amp; ops control','Disruption mgmt']],
-  'Couchbase Server','PNR · manifest · crew','Sync Gateway','Channel per flight / station',
-  [['Maintenance','Defect &amp; parts'],['Revenue mgmt','Upsell pricing']],false)}
-${trunk([SPINE_L,SPINE_R],[1,0])}
-${step(575,TRUNK_Y,4)}
-${T(SPINE_R+16,B1[1]-12,'Satcom is metered: the aircraft syncs only its own flight.','note')}
-${esL('Aircraft · tail N412UA, in flight','This flight only')}
-${T(LBL+22,303,'Or no box: crew iPads sync P2P, one uploads at the gate.','note')}
-${app(175,ROW1,200,ROW1H,'Cabin services','Upsell · meals · seats')}
-${app(175,ROW2,200,ROW2H,'IFE catalog','Pre-loaded at base')}
-${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
-${esR('Station · ORD','Station flights, 48h')}
-${app(880,ROW1,280,ROW1H,'Gate &amp; boarding','Standby · upgrades')}
-${app(880,ROW2,280,ROW2H,'Ramp / weight-balance','Load sheet')}
-${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
-${dev(175,'Purser iPad','Couchbase Lite')}${dev(335,'FA iPad','Couchbase Lite')}${dev(495,'FA iPad','Couchbase Lite')}
-${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
-${Tc(405,716,'Crew iPads keep working for the whole flight','lbl')}
-${dev(690,'Gate agent','Couchbase Lite')}${dev(850,'Ramp handheld','Couchbase Lite')}${dev(1010,'Boarding scanner','Couchbase Lite')}
-${upToBus([760,920,1080])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,2)}
-${step(965,688,3)}${Tc(920,716,'Station writes resolve locally while the core is saturated','lbl')}
-</svg>`;
-
-/* ================= 5. BANKING ================= */
-const bank=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
-${frame([[CLOUD[0],'CLOUD',['Bank data center','or Capella']],
-          [EDGE[0],'BRANCH EDGE',['Edge Server','Branch back office']],
-          [CLIENT[0],'CLIENT',['Teller · kiosk','Field agent tablet']]],
-         ['WAN · branch link / 4G backup','Branch LAN · Wi-Fi · BLE'],true)}
-${cloudTier('Bank core: ledger of record, customer, risk',
-  [['Core banking','Ledger of record'],['KYC &amp; onboarding','Customer profile']],
-  'Couchbase Server','Customer · product · forms','Sync Gateway','Channel per branch / agent',
-  [['Fraud &amp; risk','Scoring rules'],['Regulatory reporting','Audit trail']],false)}
-${trunk([SPINE_L],[0])}
-${step(575,TRUNK_Y,4)}
-${T(MID+22,B1[1]-12,'Core banking stays the ledger. The edge captures and queues.','note')}
-${esL('Branch 214','Sync + REST APIs')}
-${app(175,ROW1,200,ROW1H,'Teller services','Cash · receipts · queue')}
-${app(175,ROW2,200,ROW2H,'Store-and-forward','Posts to core on reconnect')}
-${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
-${dev(175,'Teller 1','Couchbase Lite')}${dev(335,'Teller 2','Couchbase Lite')}${thin(495,'Lobby kiosk','Web client')}
-${upToBus([245,405])}${p([[405,BUS],[SPINE_L,BUS]],{ends:'none'})}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,1)}
-${p([[565,DEV],[565,ROW2+ROW2H]],{k:'g',ends:'end'})}${step(565,BUS,2)}
-${Tc(405,716,'Tellers keep serving customers when the branch link drops','lbl')}
-${T(MID+22,286,'Field agents · no branch','loc')}
-${T(MID+22,ROW1+18,'Agents carry the data. Tablets sync straight to the','note')}
-${T(MID+22,ROW1+34,'cloud Sync Gateway whenever there is coverage.','note')}
-${T(MID+22,ROW1+56,'Each tablet holds only its assigned customers.','note')}
-${[760,920,1080].map(c=>p([[c,DEV],[c,BUS]],{ends:'none'})).join('')}
-${p([[760,BUS],[1140,BUS]],{ends:'none'})}
-${p([[1140,BUS],[1140,154],[715,154]],{dash:1,ends:'end'})}
-${step(1140,B2[0]+30,3)}
-${dev(690,'Agent tablet','Couchbase Lite')}${dev(850,'Agent tablet','Couchbase Lite')}${dev(1010,'Supervisor','Couchbase Lite')}
-${p2p(830,850)}${p2p(990,1010)}
-${step(920,688,5)}${Tc(920,716,'P2P: agents hand captured applications to a supervisor','lbl')}
-</svg>`;
-
-/* ================= 6. EDGE AI ================= */
-const edgeai=`<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg">${DEFS}
-${frame([[CLOUD[0],'CLOUD',['Capella','Model &amp; index authoring']],
-          [EDGE[0],'EDGE INFERENCE',['Site server','Ruggedized box']],
-          [CLIENT[0],'CLIENT',['Handheld','Wearable','Robot']]],
-         ['WAN · may be absent for days','Site LAN · Wi-Fi'],true)}
-${cloudTier('Cloud: where knowledge and models are built, not served',
-  [['Embedding pipeline','Docs to vectors'],['Model registry','Quantized artifacts']],
-  'Couchbase Server','Corpus + vector index','Sync Gateway','Channel per site / role',
-  [['Eval &amp; feedback','Answer quality'],['Curation','Source-of-truth docs']],false)}
-${p([[640,178],[640,TRUNK_Y]],{ends:'none'})}
-${p([[595,TRUNK_Y],[678,TRUNK_Y]],{ends:'none'})}
-${p([[595,TRUNK_Y],[595,ROW2+ROW2H/2],[580,ROW2+ROW2H/2]],{ends:'end'})}
-${p([[678,TRUNK_Y],[678,ROW2+ROW2H/2],[700,ROW2+ROW2H/2]],{dash:1,ends:'end'})}
-${step(617,TRUNK_Y,1)}
-${T(SPINE_R+16,B1[1]-12,'Push the index and model down, pull captures back up.','note')}
-${stackL('Site A · connected','Couchbase Server','Site vector subset','Sync Gateway','Device channels')}
-${app(175,ROW1,200,ROW1H,'Local LLM runtime','llama.cpp · quantized')}
-${app(175,ROW2,200,ROW2H,'Retrieval service','Vector search in CBL')}
-${gl(ROW1+ROW1H/2,375,430)}${gl(ROW2+ROW2H/2,375,430)}
-${T(MID+36,286,'Site B','loc')}${stackR('','Couchbase Server','Seeded at deploy','Sync Gateway','Device channels')}
-${app(880,ROW1,280,ROW1H,'Local LLM runtime','Same artifact, no cloud')}
-${app(880,ROW2,280,ROW2H,'Retrieval service','Vector search in CBL')}
-${gl(ROW1+ROW1H/2,850,880)}${gl(ROW2+ROW2H/2,850,880)}
-${T(SPINE_R+16,ROW2+ROW2H+24,'No inference call ever leaves the site.','lbl')}
-${dev(175,'Field handheld','CBL + vector')}${dev(335,'Wearable','CBL + vector')}${dev(495,'Inspection drone','CBL + vector')}
-${upToBus([245,405,565])}${spineUp(SPINE_L,ROW2+ROW2H)}${step(SPINE_L,B2[0]+30,2)}
-${Tc(405,716,'On-device retrieval when even the site server is out of range','note')}
-${dev(690,'Technician','CBL + vector')}${dev(850,'Robot','CBL + vector')}${dev(1010,'Sensor hub','CBL')}
-${upToBus([760,920,1080])}${spineUp(SPINE_R,ROW2+ROW2H)}${step(SPINE_R,B2[0]+30,3)}
-${Tc(920,716,'Site B keeps working for weeks with no uplink','lbl')}
-</svg>`;
-
 /* ================= copy ================= */
 const data=[
- {id:'front',tab:'Frontline · Field service',h:'Frontline and field service apps',
-  usecase:'This is the most common Couchbase Mobile deployment, and the simplest. An app on a phone or tablet runs Couchbase Lite and syncs directly with Sync Gateway or Capella App Services in the cloud. There\u2019s no server on site. The app reads and writes against its local database, keeps working offline, and syncs whenever it has a connection. Frontline workers inside a building with patchy Wi-Fi and field technicians at remote sites use exactly the same architecture.',
+ {id:'front',tab:'Field service · Frontline',h:'Field service and frontline apps',
+  usecase:'This is the most common Couchbase Mobile deployment, and the simplest. An app on a phone or tablet runs Couchbase Lite and syncs directly with Sync Gateway or Capella App Services. There\u2019s no server on site. The app reads and writes against its local database, keeps working offline, and syncs whenever it has a connection. It fits field and frontline work in many industries: utilities, banking and insurance, health and mobile clinics, fulfilment and delivery. Peer-to-peer sync is optional, and the diagram shows one case where it helps and one where it isn\u2019t needed.',
   svg:front,
-  flow:['Frontline workers, such as store associates, nurses, and warehouse staff, read and write to Couchbase Lite on their device. The app keeps working through Wi-Fi dead spots and syncs as soon as the connection comes back.',
-    'Field technicians carry the data for their jobs on the device: work orders, asset history, manuals, and checklists. They can work at a remote site for hours with no coverage, then sync photos, readings, and completed jobs once they\u2019re back in range.',
-    'Sync Gateway or Capella App Services syncs each device with the cloud, scoped by channel so each person only gets the data for their own team, site, or jobs. The cloud connects to the customer\u2019s systems for work orders, assets, and scheduling.'],
+  flow:['A mining crew works underground with no coverage for a whole shift. Their devices share readings and checklists with each other over P2P on a local network, so the whole crew sees the same data.',
+    'When the crew is back in coverage, their devices sync with the cloud.',
+    'Insurance claims adjusters work alone, so there\u2019s nothing to share over P2P. Each adjuster\u2019s device syncs straight to the cloud whenever it has a signal.',
+    'Sync Gateway or Capella App Services syncs each device with the cloud, and channels give each person only their own team\u2019s or site\u2019s data. The cloud connects to the customer\u2019s systems for work orders, assets, and scheduling.'],
   why:['The simplest architecture: devices sync straight to the cloud, with no server to install or run on site.',
     'Offline-first by design. The app reads and writes locally, so it\u2019s fast and keeps working without a connection.',
-    'Channels give each person only the data they need, which keeps devices light and data private.',
-    'Couchbase Lite runs on iOS, Android, and .NET, so one sync setup covers a mixed device fleet.'],
+    'P2P is there when a team needs to share data with no network, and can be left out when people work alone.',
+    'Couchbase Lite Enterprise Edition can encrypt the database on the device, which matters for customer or patient data.'],
   build:['Couchbase Lite in the mobile app, syncing with Sync Gateway or Capella App Services',
-   'Channels per user, team, or site',
-   'Add an edge tier only when a location has to keep working as a group without the cloud. The other tabs show when that applies.']},
+   'Channels grouped by team, site, or territory rather than one per person',
+   'P2P sync only where a team needs to share data offline']},
 
  {id:'retail',tab:'Retail · POS',h:'Retail point of sale',
   usecase:'Two ways to keep checkout running when a store\u2019s internet connection drops, and either one works for any kind of store. Option A puts nothing in the back office: POS lanes running Couchbase Lite sync with each other over the store network, and with the cloud whenever the uplink is up. Option B adds an Edge Server in the store. It syncs with Couchbase Lite apps and serves REST APIs to web clients such as kiosks and fixed POS terminals, so one store can run both kinds of client. Both options sync into the same central pricing and inventory systems.',
@@ -490,85 +549,113 @@ const data=[
     'Option B. Couchbase Lite apps, such as a mobile ordering app, sync with the store\u2019s Edge Server.',
     'Option B. Web clients such as kiosks and fixed POS terminals don\u2019t run Couchbase Lite. They read and write through the Edge Server\u2019s REST APIs.',
     'Option B. The Edge Server syncs with the cloud Sync Gateway: sales go up, pricing and promotions come down, scoped to a channel per store.'],
-  why:['Two deployment choices for the same problem. Skip the in-store server entirely, or add an Edge Server when the store needs to support web clients.',
-    'Edge Server is lightweight and runs on small back-office hardware, so there\u2019s no database cluster to run in every store.',
-    'One Edge Server serves Couchbase Lite apps over sync and web clients over REST APIs at the same time.',
+  why:['Choose Option B, an Edge Server, when the store\u2019s network is unreliable and it needs a local copy of its catalog, pricing, and promotions with one upstream connection instead of one per device, or when the store has many devices that should stay consistent without a round trip to the cloud.',
+    'Choose Option A, no in-store server, for a small store with a handful of devices that all run Couchbase Lite and can sync with the cloud, and with each other over P2P during an outage. It also fits stores with reliable connectivity.',
+    'Edge Server is lightweight and runs on small back-office hardware. It serves Couchbase Lite apps over sync and web clients over REST APIs at the same time.',
     'Channels keep each store to its own data.'],
-  build:['Option A: Couchbase Lite peer-to-peer sync between lanes, plus sync to Sync Gateway or Capella App Services',
+  build:['Option A: Couchbase Lite peer-to-peer sync between lanes, plus sync with Sync Gateway or Capella App Services',
    'Option B: one Edge Server per store, syncing with Sync Gateway or Capella App Services',
    'A channel per store for store data, and a channel per region for pricing']},
 
- {id:'mfg',tab:'Manufacturing',h:'Plant floor and OT',
-  usecase:'Work orders and the bill of materials come down from MES. Cycle counts, scrap events, and inspection results go back up. None of that can pause for a bad WAN link, and because the plant network sits behind its own segment, the plant\u2019s own servers are often the highest tier a line device can reach.',
-  svg:mfg,
-  flow:['Line devices write to Couchbase Lite first: HMIs, inspection cameras, and PLC gateways running Couchbase Lite for Java or C. They sync to the plant\u2019s Sync Gateway over the plant network.',
-    'A Couchbase Server in the plant keeps 30 days of history, so edge inference can score defects locally without waiting on the cloud.',
-    'Each plant syncs with corporate through Sync Gateway to Sync Gateway replication, one channel per plant, feeding OEE dashboards, fleet benchmarking, and model retraining. For a smaller fleet of under about two dozen plants, XDCR between the plant and corporate Couchbase Servers is an alternative.'],
-  why:['The plant keeps running through a WAN cut. Production data builds up locally and syncs once the link comes back.',
-    'Defect scoring reads straight from the plant\u2019s own Couchbase Server, with no round trip to the cloud.',
-    'Couchbase Lite for Java and C runs the same sync engine on an industrial PC or a PLC gateway, not just a phone or tablet.',
-    'Forty plants, one pattern: a channel per plant and a standard plant setup, instead of forty one-off integrations.'],
-  build:['<code>plant_id</code> and <code>line_id</code> channels',
-   'Couchbase Lite for Java on the PLC gateway, Couchbase Lite for .NET on the HMI',
-   'Sync Gateway to Sync Gateway replication between each plant and corporate; XDCR for fleets of under about two dozen plants',
-   'Expiry on raw telemetry at the plant, so only the aggregates replicate up']},
-
- {id:'hosp',tab:'Hospitality · Cruise',h:'Cruise ship operations',
-  usecase:'A ship is about as disconnected as an edge gets. It sails with a full copy of the sailing\u2019s data and only reconciles with shore when it\u2019s in port or paying for satellite time. Every bar tab, folio charge, muster scan, and concierge question has to resolve on board, with no shore connection in the loop.',
-  svg:hosp,
-  flow:['Crew tablets, bar terminals, and cabin panels run Couchbase Lite and sync with the ship\u2019s Sync Gateway.',
-    'At sea, the ship\u2019s Couchbase Server is the source of truth. POS, folio, muster, and the AI concierge all read and write against it directly.',
-    'Ashore, away from the ship, a small group of excursion scanners and guide tablets sync with each other peer-to-peer, then sync with the ship once they\u2019re back aboard.',
-    'The ship syncs with shore through Sync Gateway to Sync Gateway replication, or XDCR between the two Couchbase Servers. It runs in port or over VSAT, and channels limit what crosses the link.'],
-  why:['Built for days offline, not seconds. The ship holds a full copy of the sailing\u2019s data and keeps working the whole time it\u2019s at sea.',
-    'Only changed documents replicate to shore, and channels limit what crosses the link, which matters when the link is satellite time you\u2019re paying for.',
-    'The concierge answers from data on board, without placing a shore call.',
-    'Channels are scoped by role, so a guest device never sees crew or manifest data.'],
-  build:['<code>sailing_id</code>, <code>role</code>, and <code>cabin_id</code> channels',
-   'Sync Gateway to Sync Gateway replication between ship and shore, or XDCR between Couchbase Servers']},
-
- {id:'air',tab:'Transportation · Airline',h:'Airline cabin and station',
-  usecase:'Two edges, and they don\u2019t look alike. The aircraft carries exactly one flight\u2019s worth of state through a satcom-metered leg. The station carries 48 hours of departures across gate, ramp, and boarding. Both run a small Edge Server rather than a database cluster. On aircraft with no onboard server, crew devices can carry the flight on their own over P2P instead.',
+ {id:'air',tab:'Transportation · Airline',h:'Airline cabin and airport',
+  usecase:'Two edges, and they don\u2019t look alike. The aircraft carries one flight\u2019s worth of data through a satellite link that\u2019s metered and often down. The airport hub handles a high volume of departures across gate, ramp, and boarding. The aircraft runs a small Edge Server, while a hub like ORD runs Couchbase Server and Sync Gateway to handle the volume. Smaller airports can run an Edge Server instead.',
   svg:air,
-  flow:['Crew iPads write in the cabin: meal choices, upsells, seat changes, and cabin defects land in Couchbase Lite as they happen, then sync to the aircraft\u2019s Edge Server. On aircraft with no onboard server, the iPads sync with each other peer-to-peer and one of them uploads at the gate.',
-    'At the gate, agents write standby lists, upgrades, and boarding scans to the station\u2019s Edge Server.',
-    'Ramp reads the load sheet from that same Edge Server rather than the core, since weight and balance can\u2019t wait on a WAN round trip.',
-    'The aircraft syncs with the core over satcom on a channel for its flight. Stations do the same over broadband on a station channel.'],
-  why:['Edge Server fits on in-vehicle compute and a station back office, where a full server cluster doesn\u2019t.',
-    'Only changed documents replicate, and a flight-scoped channel keeps the metered satcom link carrying just that flight\u2019s data.',
+  flow:['Crew iPads record meal choices, upsells, seat changes, and cabin defects in Couchbase Lite as they happen, and sync with the aircraft\u2019s Edge Server. On aircraft with no onboard server, the iPads can sync with each other peer-to-peer and one uploads at the gate.',
+    'At the hub, gate agents, ramp handhelds, and boarding scanners sync with the airport\u2019s Sync Gateway, so standby lists, upgrades, and boarding scans are handled locally.',
+    'The load sheet still comes from the airline\u2019s certified load-control system. Couchbase distributes it to ramp devices; it doesn\u2019t create it.',
+    'The aircraft syncs with the core over satcom on a channel for its flight. The hub syncs with the core through ISGR.'],
+  why:['Edge Server fits on an aircraft\u2019s onboard computer and in a small airport\u2019s back office. A busy hub needs the capacity of Couchbase Server and Sync Gateway.',
+    'A flight-scoped channel keeps the metered satcom link carrying only that flight\u2019s data, and only changes replicate.',
     'A disruption is a write-heavy event, and local-first means rebooking and reseating keep working even while the core is swamped.',
     'The IFE catalog and manifest get loaded on the ground, not pulled down mid-flight.'],
-  build:['Edge Server on the aircraft and at each station, syncing with Sync Gateway or Capella App Services',
-   '<code>flight_id</code> channel on the aircraft, <code>station_id</code> on the ground']},
+  build:['Edge Server on each aircraft, syncing with Sync Gateway or Capella App Services',
+   'Couchbase Server and Sync Gateway at hub airports, with ISGR to the core; Edge Server at smaller airports',
+   'A channel per flight on the aircraft, and per airport on the ground']},
 
- {id:'bank',tab:'Banking · Branch',h:'Bank branches and field agents',
-  usecase:'A branch has to keep serving customers when its link to the core drops: look someone up, capture an account application and its KYC documents, take a deposit within a set limit. Field agents in areas with patchy coverage need the same thing with no branch at all. The core banking system stays the ledger of record throughout. The edge captures and queues, and the core posts.',
+ {id:'hosp',tab:'Hospitality · Cruise',h:'Cruise ship operations',
+  usecase:'A ship is about as disconnected as an edge gets. It sails with a full copy of the sailing\u2019s data and only syncs with shore in port or over paid satellite time. Every bar tab, folio charge, muster scan, and guest request has to work on board, with no shore connection in the loop.',
+  svg:hosp,
+  flow:['Crew tablets, POS terminals, the guest app, cabin panels, and muster scanners all run Couchbase Lite. They read and write locally and sync with the ship\u2019s Sync Gateway over the ship network.',
+    'The ship syncs with shore through ISGR, in port or over VSAT. Only changes cross the link, and channels limit what each side receives.'],
+  why:['Built for days offline. Everything inside the dashed ship boundary in the diagram works with no shore connection.',
+    'The ship\u2019s Couchbase Server runs as a multi-node cluster, because it\u2019s the only source of truth for days at a time.',
+    'Channels by role mean a guest\u2019s phone never sees crew or manifest data.',
+    'Only changes replicate to shore, which matters when the link is satellite time you\u2019re paying for.'],
+  build:['A multi-node Couchbase Server cluster and Sync Gateway on board',
+   'ISGR between ship and shore',
+   'A channel per sailing, plus channels by role so guests, crew, and cabins each see only their own data']},
+
+ {id:'bank',tab:'Banking · Branch',h:'Bank branches',
+  usecase:'A branch has to keep serving customers when its link to core banking drops: look someone up, capture an account application and its KYC documents, take a deposit within a set limit. Core banking stays the ledger of record throughout. The branch captures transactions, and the core posts them. Field agents who work without a branch follow the pattern in the Field service tab.',
   svg:bank,
-  flow:['Teller workstations write to Couchbase Lite and sync with the branch\u2019s Edge Server over the LAN.',
+  flow:['Teller workstations and advisor tablets run Couchbase Lite and sync with the branch\u2019s Edge Server over the branch network.',
     'The lobby kiosk is a web client. It reads and writes through the Edge Server\u2019s REST APIs.',
-    'Field agents run Couchbase Lite on their tablets and sync straight to the cloud Sync Gateway whenever there\u2019s coverage. Each tablet only holds the customers assigned to that agent. This is the same pattern as the Frontline and field service tab.',
-    'The branch Edge Server syncs with the cloud. Captured transactions wait in a store-and-forward queue until the core posts them, and the result syncs back to the branch.',
-    'In the field, with no server nearby, an agent hands captured applications to a supervisor\u2019s tablet over P2P for review.'],
-  why:['The edge never becomes a second ledger. It captures transactions, and the core posts them.',
-    'Offline limits are set by the bank and synced to the edge, so a branch or agent can only approve what the bank allows.',
-    'Channels per branch and per agent keep customer data limited to the people who need it.',
-    'Couchbase Lite Enterprise Edition can encrypt the database on each device, which matters for a tablet that leaves the building.'],
+    'The Edge Server syncs with the cloud Sync Gateway. If the link to core banking drops, the Edge Server keeps captured transactions until the core posts them, and the result syncs back to the branch.'],
+  why:['The branch never becomes a second ledger. It captures transactions, and core banking posts them.',
+    'Offline limits are set by the bank and synced to the branch, so a branch can only approve what the bank allows.',
+    'One Edge Server serves Couchbase Lite apps over sync and the lobby kiosk over REST APIs.',
+    'Couchbase Lite Enterprise Edition can encrypt the database on each device.'],
   build:['Edge Server per branch, syncing with Sync Gateway or Capella App Services',
-   '<code>branch_id</code> and <code>agent_id</code> channels']},
+   'A channel per branch',
+   'Couchbase Lite Enterprise Edition with database encryption on teller and advisor devices']},
 
- {id:'edgeai',tab:'Edge AI',h:'Edge AI and on-device retrieval',
-  usecase:'The cloud is where the knowledge and the models get built, not where they get served. Inference and retrieval both have to happen at the edge, which means the vector index needs to live right next to the model, whether that\u2019s a site server or the device itself.',
+ {id:'health',tab:'Healthcare · Pop-up clinics',h:'Mobile pop-up clinics',
+  usecase:'Mobile clinics, vaccination drives, and rural health camps set up for a day in places with little or no coverage. The clinic team still needs to register patients, record vitals and treatment, and dispense medicine, with everyone looking at the same patient record. Tablets run Couchbase Lite and share data with each other over peer-to-peer sync on a local hotspot, then sync with the cloud once the team is back in coverage.',
+  svg:health,
+  flow:['Registration, clinician, and pharmacy tablets run Couchbase Lite and sync with each other over P2P on a local hotspot. A patient registered at the front desk shows up on the clinician\u2019s tablet straight away, with no internet.',
+    'When the team is back in coverage, the tablets sync the day\u2019s records with the cloud and pick up the patient list for the next clinic.'],
+  why:['P2P keeps the whole clinic team on the same record with no network at all.',
+    'Nothing to install at the site: the tablets are the whole system.',
+    'Couchbase Lite Enterprise Edition can encrypt the database on each tablet, which matters for patient data.',
+    'Channels by clinic or region keep each tablet to the patients it needs.'],
+  build:['Couchbase Lite on each tablet, with P2P sync over a local network',
+   'Sync with Sync Gateway or Capella App Services when in coverage',
+   'Channels grouped by clinic or region, not one per patient',
+   'Couchbase Lite Enterprise Edition with database encryption']},
+
+ {id:'b2c',tab:'Consumer apps',h:'Consumer mobile apps',
+  usecase:'For a consumer app, slow loading and connection errors show up directly in app store reviews. An offline-first app reads from Couchbase Lite on the phone, so screens load instantly and the app keeps working on a weak signal or none at all. Changes are saved on the phone and sync in the background through Sync Gateway or Capella App Services. As in the Field service tab, there\u2019s no edge tier.',
+  svg:b2c,
+  flow:['Shopping and loyalty apps keep the catalog, wishlist, cart, and loyalty card on the phone, so they load instantly, even on a weak signal inside a store.',
+    'Travel apps keep tickets and boarding passes on the phone, so they open in airplane mode or underground.',
+    'Sync Gateway or Capella App Services syncs each phone with the cloud: personal data on a channel per user, and shared data like the catalog on shared channels.'],
+  why:['Reads come from the phone, not the network, so the app never makes users wait on a spinner for data they already have.',
+    'Changes are saved locally first and synced later, so a dropped connection doesn\u2019t lose a cart or a form.',
+    'Only changes sync, which saves the user\u2019s mobile data.',
+    'The same approach works for iOS and Android apps.'],
+  build:['Couchbase Lite in the iOS and Android app',
+   'Sync Gateway or Capella App Services',
+   'A channel per user for personal data, and shared channels for the catalog and other content']},
+
+ {id:'mfg',tab:'Manufacturing',h:'Plant floor and OT',
+  usecase:'Work orders and the bill of materials come down from MES. Production counts, scrap events, and inspection results entered on the line go back up. None of that can pause for a bad WAN link. Machine data from PLCs stays in the plant\u2019s existing control systems; Couchbase holds what operators and inspectors enter on HMIs and tablets.',
+  svg:mfg,
+  flow:['Operators and inspectors enter data on HMIs and tablets running Couchbase Lite. Each device syncs with the plant\u2019s Sync Gateway over the plant network.',
+    'A Couchbase Server in the plant keeps the plant\u2019s history, so edge inference can score defects locally without waiting on the cloud.',
+    'Each plant syncs with corporate through ISGR, one channel per plant, feeding OEE dashboards, fleet benchmarking, and model retraining. For a smaller fleet of under about two dozen plants, XDCR between the plant and corporate Couchbase Servers is an alternative.'],
+  why:['The plant keeps running through a WAN cut. Production data builds up locally and syncs once the link comes back, with nothing lost.',
+    'Defect scoring reads straight from the plant\u2019s own Couchbase Server, with no round trip to the cloud.',
+    'Couchbase Lite runs on the HMIs and tablets where operators and inspectors actually enter data.',
+    'Forty plants, one pattern: a standard plant setup instead of forty one-off integrations.'],
+  build:['A channel per plant and per production line',
+   'Couchbase Server and Sync Gateway in each plant',
+   'ISGR between each plant and corporate; XDCR is an alternative for fleets of under about two dozen plants',
+   'Plant data replicates to corporate in full, for recalls, scrap reporting, and historical analysis']},
+
+ {id:'edgeai',tab:'Edge AI',h:'On-device AI',
+  usecase:'Edge AI adds to what you can do in the cloud rather than replacing it. When the device is connected, the app can use cloud AI as usual. When it isn\u2019t, the whole question-and-answer loop runs on the device: an embedding model turns the question into a vector, Couchbase Lite vector search finds matching content in the local database, and a local language model writes the answer. It\u2019s also the simplest architecture on this page: devices sync content straight from the cloud, with no edge tier.',
   svg:edgeai,
-  flow:['Embeddings and quantized model artifacts replicate from the cloud to each site through Sync Gateway to Sync Gateway replication, scoped by channel per site and role. Captures and answer-quality signals replicate back the same way for reindexing and evaluation.',
-    'At Site A, devices retrieve locally. Vector search in Couchbase Lite works on a handheld, a wearable, or a robot, even out of range of the site server.',
-    'Site B can go weeks with no uplink. Devices sync new captures to the site\u2019s Sync Gateway, and the site holds them until a link appears.'],
-  why:['Vector search built into Couchbase Lite means there\u2019s no separate embedded vector store to ship and keep running.',
-    'Data doesn\u2019t leave the site: both the retrieval corpus and the inference call stay local, which is usually the actual requirement here, not just a nice-to-have.',
-    'Seeding at deploy time works even for sites that will never get a link at all.',
-    'The index has the same shape in the cloud, on the site server, and on the device, so nothing has to be re-modeled per tier.'],
-  build:['<code>site_id</code> and <code>role</code> channels for corpus scoping',
-   'Couchbase Lite vector search on the devices',
-   'llama.cpp or Core ML for the runtime, CBL for retrieval']}
+  flow:['The cloud prepares the knowledge. Source documents are turned into embeddings and stored in Couchbase Server, and Sync Gateway or Capella App Services syncs the content and its embeddings to each device, scoped by channel to the team or site that needs it.',
+    'On the device, the app embeds the user\u2019s question with a local embedding model, runs a vector search in Couchbase Lite to find the closest content, and passes the results to a local language model to write the answer. None of this needs a connection.',
+    'The models themselves ship with the app or download separately. They don\u2019t travel through Sync Gateway.'],
+  why:['Vector search is built into Couchbase Lite, so there\u2019s no separate on-device vector store to ship and maintain.',
+    'Answers keep working with no connection, and the data an answer is based on never leaves the device.',
+    'When the device is connected, the same app can still use cloud AI. On-device AI adds to the cloud rather than replacing it.',
+    'Content and embeddings sync like any other data, so updates reach every device without an app release.'],
+  build:['Couchbase Lite with vector search in the mobile app',
+   'An embedding model and a small language model on the device, delivered with the app or as a separate download',
+   'Sync Gateway or Capella App Services to sync content and embeddings, with channels by team or site',
+   'Devices with enough memory to run the models, such as current phones, tablets, and laptops']}
 ];
 
 const nav=document.getElementById('nav'), main=document.getElementById('main');
